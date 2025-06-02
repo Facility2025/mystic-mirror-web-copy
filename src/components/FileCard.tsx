@@ -1,7 +1,7 @@
-
 import React, { useState } from 'react';
 import { Download, Edit, Eye } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { AspectRatio } from '@/components/ui/aspect-ratio';
 
 interface FileCardProps {
   id: string;
@@ -45,33 +45,39 @@ const FileCard = ({ id, name, description, date, type, icon, fileUrl, fileType }
 
     if (fileType?.startsWith('image/') && !imageError) {
       return (
-        <img 
-          src={fileUrl} 
-          alt={name}
-          className="w-full h-full object-contain rounded"
-          onError={() => setImageError(true)}
-        />
+        <AspectRatio ratio={16 / 9} className="w-full">
+          <img 
+            src={fileUrl} 
+            alt={name}
+            className="w-full h-full object-cover rounded"
+            onError={() => setImageError(true)}
+          />
+        </AspectRatio>
       );
     }
 
     if (fileType?.startsWith('video/')) {
       return (
-        <video 
-          src={fileUrl}
-          className="w-full h-full object-contain rounded"
-          controls
-          preload="metadata"
-        />
+        <AspectRatio ratio={16 / 9} className="w-full">
+          <video 
+            src={fileUrl}
+            className="w-full h-full object-cover rounded"
+            controls
+            preload="metadata"
+          />
+        </AspectRatio>
       );
     }
 
     if (fileType === 'application/pdf') {
       return (
-        <iframe
-          src={fileUrl}
-          className="w-full h-full rounded border-0"
-          title={name}
-        />
+        <AspectRatio ratio={16 / 9} className="w-full">
+          <iframe
+            src={fileUrl}
+            className="w-full h-full rounded border-0"
+            title={name}
+          />
+        </AspectRatio>
       );
     }
 
@@ -98,7 +104,7 @@ const FileCard = ({ id, name, description, date, type, icon, fileUrl, fileType }
         </div>
       </div>
 
-      <div className="flex-1 min-h-[120px] flex items-center justify-center mb-4 bg-slate-700 rounded overflow-hidden">
+      <div className="flex-1 mb-4 bg-slate-700 rounded overflow-hidden">
         {renderFilePreview()}
       </div>
 
