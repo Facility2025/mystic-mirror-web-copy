@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Upload, X, Link as LinkIcon, Image } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -109,6 +110,38 @@ const FileUploadForm = ({ isOpen, onClose, onSubmit }: FileUploadFormProps) => {
 
   const hasValidInput = name && (selectedFile || pastedImage || linkUrl);
 
+  // Função para verificar se é uma imagem
+  const isImage = (file: File) => {
+    return file && file.type.startsWith('image/');
+  };
+
+  // Função para renderizar a imagem na área de colar
+  const renderPasteAreaContent = () => {
+    // Prioridade: 1. Imagem colada, 2. Arquivo selecionado (se for imagem), 3. Placeholder
+    const imageToShow = pastedImage || (selectedFile && isImage(selectedFile) ? selectedFile : null);
+    
+    if (imageToShow) {
+      return (
+        <AspectRatio ratio={16 / 9} className="w-full">
+          <img 
+            src={URL.createObjectURL(imageToShow)}
+            alt="Imagem selecionada"
+            className="w-full h-full object-cover rounded"
+          />
+        </AspectRatio>
+      );
+    }
+
+    return (
+      <div className="min-h-[80px] flex items-center justify-center">
+        <div className="text-center">
+          <Image className="h-6 w-6 text-gray-400 mx-auto mb-1" />
+          <p className="text-gray-400 text-sm">Ctrl+V para colar imagem</p>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="bg-slate-800 border-slate-700 text-white max-w-md">
@@ -180,22 +213,7 @@ const FileUploadForm = ({ isOpen, onClose, onSubmit }: FileUploadFormProps) => {
               className="w-full bg-slate-700 border-2 border-dashed border-slate-600 rounded-lg cursor-pointer hover:border-slate-500 transition-colors"
               tabIndex={0}
             >
-              {pastedImage ? (
-                <AspectRatio ratio={16 / 9} className="w-full">
-                  <img 
-                    src={URL.createObjectURL(pastedImage)}
-                    alt="Imagem colada"
-                    className="w-full h-full object-cover rounded"
-                  />
-                </AspectRatio>
-              ) : (
-                <div className="min-h-[80px] flex items-center justify-center">
-                  <div className="text-center">
-                    <Image className="h-6 w-6 text-gray-400 mx-auto mb-1" />
-                    <p className="text-gray-400 text-sm">Ctrl+V para colar imagem</p>
-                  </div>
-                </div>
-              )}
+              {renderPasteAreaContent()}
             </div>
           </div>
 
