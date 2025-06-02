@@ -23,8 +23,6 @@ const ImageViewerModal = ({ isOpen, onClose, imageUrl, imageName }: ImageViewerM
             alt={imageName}
             className="max-w-full max-h-full object-contain"
             style={{ 
-              imageRendering: 'pixelated',
-              imageRendering: '-moz-crisp-edges',
               imageRendering: 'crisp-edges'
             }}
           />
