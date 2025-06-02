@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Upload, LogOut, File } from 'lucide-react';
+import { Upload, LogOut, FileVideo, FileText, FileImage, Settings, Database } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import FileCard from './FileCard';
 import FileUploadForm from './FileUploadForm';
@@ -17,7 +17,7 @@ const Dashboard = ({ onLogout }: DashboardProps) => {
       description: 'Descrição do arquivo 1',
       date: '29/05/2025',
       type: 'VIDEO' as const,
-      icon: <File className="h-8 w-8 text-gray-400" />
+      icon: <FileVideo className="h-8 w-8 text-red-500" />
     },
     {
       id: '02',
@@ -25,7 +25,7 @@ const Dashboard = ({ onLogout }: DashboardProps) => {
       description: '',
       date: '18/02/2025',
       type: 'VIDEO' as const,
-      icon: <File className="h-8 w-8 text-gray-400" />
+      icon: <FileVideo className="h-8 w-8 text-red-500" />
     },
     {
       id: '03',
@@ -33,7 +33,7 @@ const Dashboard = ({ onLogout }: DashboardProps) => {
       description: '',
       date: '03/03/2025',
       type: 'TEXT' as const,
-      icon: <File className="h-8 w-8 text-gray-400" />
+      icon: <FileText className="h-8 w-8 text-green-500" />
     },
     {
       id: '04',
@@ -41,7 +41,7 @@ const Dashboard = ({ onLogout }: DashboardProps) => {
       description: 'Descrição do arquivo 4',
       date: '03/04/2025',
       type: 'PDF' as const,
-      icon: <File className="h-8 w-8 text-gray-400" />
+      icon: <FileImage className="h-8 w-8 text-blue-500" />
     },
     {
       id: '05',
@@ -49,7 +49,7 @@ const Dashboard = ({ onLogout }: DashboardProps) => {
       description: '',
       date: '09/04/2025',
       type: 'AI' as const,
-      icon: <File className="h-8 w-8 text-gray-400" />
+      icon: <Settings className="h-8 w-8 text-purple-500" />
     },
     {
       id: '06',
@@ -57,7 +57,7 @@ const Dashboard = ({ onLogout }: DashboardProps) => {
       description: '',
       date: '21/04/2025',
       type: 'VPS' as const,
-      icon: <File className="h-8 w-8 text-gray-400" />
+      icon: <Database className="h-8 w-8 text-orange-500" />
     },
     {
       id: '07',
@@ -65,7 +65,7 @@ const Dashboard = ({ onLogout }: DashboardProps) => {
       description: 'Descrição do arquivo 7',
       date: '09/05/2025',
       type: 'VIDEO' as const,
-      icon: <File className="h-8 w-8 text-gray-400" />
+      icon: <FileVideo className="h-8 w-8 text-red-500" />
     },
     {
       id: '08',
@@ -73,7 +73,7 @@ const Dashboard = ({ onLogout }: DashboardProps) => {
       description: '',
       date: '11/02/2025',
       type: 'VIDEO' as const,
-      icon: <File className="h-8 w-8 text-gray-400" />
+      icon: <FileVideo className="h-8 w-8 text-red-500" />
     }
   ]);
 
@@ -84,42 +84,48 @@ const Dashboard = ({ onLogout }: DashboardProps) => {
       case 'avi':
       case 'mov':
       case 'mkv':
-        return { type: 'VIDEO' as const, icon: <File className="h-8 w-8 text-gray-400" /> };
+        return { type: 'VIDEO' as const, icon: <FileVideo className="h-8 w-8 text-red-500" /> };
       case 'txt':
       case 'doc':
       case 'docx':
-        return { type: 'TEXT' as const, icon: <File className="h-8 w-8 text-gray-400" /> };
+        return { type: 'TEXT' as const, icon: <FileText className="h-8 w-8 text-green-500" /> };
       case 'pdf':
       case 'jpg':
       case 'jpeg':
       case 'png':
       case 'gif':
-        return { type: 'PDF' as const, icon: <File className="h-8 w-8 text-gray-400" /> };
+        return { type: 'PDF' as const, icon: <FileImage className="h-8 w-8 text-blue-500" /> };
       default:
-        return { type: 'AI' as const, icon: <File className="h-8 w-8 text-gray-400" /> };
+        return { type: 'AI' as const, icon: <Settings className="h-8 w-8 text-purple-500" /> };
     }
   };
 
   const handleFileUpload = (fileData: { name: string; description: string; file: File | null; fileUrl: string; fileType: string; isLink?: boolean }) => {
-    let type;
+    let type, icon;
     
     if (fileData.isLink) {
       // Para links, tentamos determinar o tipo pela URL
       const url = fileData.fileUrl.toLowerCase();
       if (url.includes('.mp4') || url.includes('.avi') || url.includes('.mov') || url.includes('youtube.com') || url.includes('vimeo.com')) {
         type = 'VIDEO' as const;
+        icon = <FileVideo className="h-8 w-8 text-red-500" />;
       } else if (url.includes('.pdf')) {
         type = 'PDF' as const;
+        icon = <FileImage className="h-8 w-8 text-blue-500" />;
       } else if (url.includes('.jpg') || url.includes('.jpeg') || url.includes('.png') || url.includes('.gif')) {
         type = 'PDF' as const; // Usando PDF para imagens como no código original
+        icon = <FileImage className="h-8 w-8 text-blue-500" />;
       } else {
         type = 'AI' as const;
+        icon = <Settings className="h-8 w-8 text-purple-500" />;
       }
     } else if (fileData.file) {
       const result = getFileTypeFromExtension(fileData.file.name);
       type = result.type;
+      icon = result.icon;
     } else {
       type = 'AI' as const;
+      icon = <Settings className="h-8 w-8 text-purple-500" />;
     }
 
     const newId = String(files.length + 1).padStart(2, '0');
@@ -131,7 +137,7 @@ const Dashboard = ({ onLogout }: DashboardProps) => {
       description: fileData.description,
       date: currentDate,
       type: type,
-      icon: <File className="h-8 w-8 text-gray-400" />,
+      icon: icon,
       fileUrl: fileData.fileUrl,
       fileType: fileData.fileType,
       isLink: fileData.isLink
