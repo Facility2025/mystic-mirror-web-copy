@@ -168,7 +168,7 @@ const Dashboard = ({ onLogout }: DashboardProps) => {
         <div className="flex justify-between items-center mb-6">
           <Button 
             onClick={() => setIsUploadFormOpen(true)}
-            className="bg-green-500 hover:bg-green-600 text-black font-semibold"
+            className="bg-green-500 hover:bg-green-600 text-black font-semibold transform hover:scale-105 hover:translate-y-[-2px] transition-all duration-300 shadow-lg hover:shadow-xl"
           >
             <Upload className="h-4 w-4 mr-2" />
             Enviar Arquivos
@@ -182,19 +182,26 @@ const Dashboard = ({ onLogout }: DashboardProps) => {
 
         {/* Files Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {files.map((file) => (
-            <FileCard
+          {files.map((file, index) => (
+            <div 
               key={file.id}
-              id={file.id}
-              name={file.name}
-              description={file.description}
-              date={file.date}
-              type={file.type}
-              icon={file.icon}
-              fileUrl={(file as any).fileUrl}
-              fileType={(file as any).fileType}
-              isLink={(file as any).isLink}
-            />
+              className="transform hover:scale-105 hover:translate-y-[-8px] transition-all duration-300 hover:shadow-2xl"
+              style={{
+                animationDelay: `${index * 0.1}s`
+              }}
+            >
+              <FileCard
+                id={file.id}
+                name={file.name}
+                description={file.description}
+                date={file.date}
+                type={file.type}
+                icon={file.icon}
+                fileUrl={(file as any).fileUrl}
+                fileType={(file as any).fileType}
+                isLink={(file as any).isLink}
+              />
+            </div>
           ))}
         </div>
       </main>
