@@ -1,15 +1,17 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Upload, LogOut, FileVideo, FileText, FileImage, Settings, Database } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import FileCard from './FileCard';
+import FileUploadForm from './FileUploadForm';
 
 interface DashboardProps {
   onLogout: () => void;
 }
 
 const Dashboard = ({ onLogout }: DashboardProps) => {
-  const files = [
+  const [isUploadFormOpen, setIsUploadFormOpen] = useState(false);
+  const [files, setFiles] = useState([
     {
       id: '01',
       name: 'Arquivo 01',
@@ -74,7 +76,49 @@ const Dashboard = ({ onLogout }: DashboardProps) => {
       type: 'VIDEO' as const,
       icon: <FileVideo className="h-8 w-8 text-red-500" />
     }
-  ];
+  ]);
+
+  const getFileTypeFromExtension = (fileName: string) => {
+    const extension = fileName.split('.').pop()?.toLowerCase();
+    switch (extension) {
+      case 'mp4':
+      case 'avi':
+      case 'mov':
+      case 'mkv':
+        return { type: 'VIDEO' as const, icon: <FileVideo className="h-8 w-8 text-red-500" /> };
+      case 'txt':
+      case 'doc':
+      case 'docx':
+        return { type: 'TEXT' as const, icon: <FileText className="h-8 w-8 text-green-500" /> };
+      case 'pdf':
+      case 'jpg':
+      case 'jpeg':
+      case 'png':
+      case 'gif':
+        return { type: 'PDF' as const, icon: <FileImage className="h-8 w-8 text-blue-500" /> };
+      default:
+        return { type: 'AI' as const, icon: <Settings className="h-8 w-8 text-purple-500" /> };
+    }
+  };
+
+  const handleFileUpload = (fileData: { name: string; description: string; file: File | null }) => {
+    if (fileData.file) {
+      const { type, icon } = getFileTypeFromExtension(fileData.file.name);
+      const newId = String(files.length + 1).padStart(2, '0');
+      const currentDate = new Date().toLocaleDateString('pt-BR');
+      
+      const newFile = {
+        id: newId,
+        name: fileData.name,
+        description: fileData.description,
+        date: currentDate,
+        type: type,
+        icon: icon
+      };
+
+      setFiles([newFile, ...files]);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-black">
@@ -96,7 +140,10 @@ const Dashboard = ({ onLogout }: DashboardProps) => {
       {/* Main Content */}
       <main className="p-6">
         <div className="flex justify-between items-center mb-6">
-          <Button className="bg-green-500 hover:bg-green-600 text-black font-semibold">
+          <Button 
+            onClick={() => setIsUploadFormOpen(true)}
+            className="bg-green-500 hover:bg-green-600 text-black font-semibold"
+          >
             <Upload className="h-4 w-4 mr-2" />
             Enviar Arquivos
           </Button>
@@ -104,7 +151,7 @@ const Dashboard = ({ onLogout }: DashboardProps) => {
 
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-white text-lg font-semibold">Página 1 de 2</h2>
-          <p className="text-gray-400">Exibindo 1-30 de 45 arquivos</p>
+          <p className="text-gray-400">Exibindo 1-30 de {files.length + 37} arquivos</p>
         </div>
 
         {/* Files Grid */}
@@ -122,6 +169,13 @@ const Dashboard = ({ onLogout }: DashboardProps) => {
           ))}
         </div>
       </main>
+
+      {/* Upload Form Modal */}
+      <FileUploadForm
+        isOpen={isUploadFormOpen}
+        onClose={() => setIsUploadFormOpen(false)}
+        onSubmit={handleFileUpload}
+      />
     </div>
   );
 };
