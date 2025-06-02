@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Eye, EyeOff, Mail, Lock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -21,7 +20,7 @@ const LoginFormCard = ({ onLogin, onRegisterClick }: LoginFormCardProps) => {
 
   return (
     <div className="w-full max-w-md relative z-10">
-      <div className="bg-gradient-to-br from-black/90 to-purple-900/80 border border-purple-500 rounded-lg p-8 shadow-2xl transform hover:scale-105 transition-all duration-300 backdrop-blur-sm">
+      <div className="bg-gradient-to-br from-black/95 to-gray-900/95 border border-purple-500/50 rounded-lg p-8 shadow-2xl transform hover:scale-105 transition-all duration-300 backdrop-blur-md">
         <div className="text-center mb-8">
           <h1 className="text-2xl font-bold text-green-400 mb-2">Sistema de Arquivos</h1>
           <p className="text-gray-400">Faça login para continuar</p>
