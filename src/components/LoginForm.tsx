@@ -5,7 +5,7 @@ import LoginFormCard from './LoginFormCard';
 import RegisterForm from './RegisterForm';
 
 interface LoginFormProps {
-  onLogin: () => void;
+  onLogin: (loginData: { email: string; password: string }) => void;
 }
 
 const LoginForm = ({ onLogin }: LoginFormProps) => {
@@ -13,7 +13,8 @@ const LoginForm = ({ onLogin }: LoginFormProps) => {
 
   const handleRegister = (userData: { name: string; email: string; password: string }) => {
     console.log('Usuário registrado:', userData);
-    onLogin();
+    // Para usuários registrados, definir como 'usuario' por padrão
+    onLogin({ email: userData.email, password: userData.password });
   };
 
   return (

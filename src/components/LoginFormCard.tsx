@@ -1,10 +1,11 @@
+
 import React, { useState } from 'react';
 import { Eye, EyeOff, Mail, Lock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
 interface LoginFormCardProps {
-  onLogin: () => void;
+  onLogin: (loginData: { email: string; password: string }) => void;
   onRegisterClick: () => void;
 }
 
@@ -15,7 +16,7 @@ const LoginFormCard = ({ onLogin, onRegisterClick }: LoginFormCardProps) => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onLogin();
+    onLogin({ email, password });
   };
 
   return (
@@ -96,7 +97,8 @@ const LoginFormCard = ({ onLogin, onRegisterClick }: LoginFormCardProps) => {
 
           <div className="border-t border-slate-600 pt-4 text-center text-xs text-gray-500">
             <p>Credenciais de teste:</p>
-            <p>Email: admin@teste.com</p>
+            <p>Email: admin@teste.com (Admin)</p>
+            <p>Email: usuario@teste.com (Usuário)</p>
             <p>Senha: 123456</p>
           </div>
         </form>

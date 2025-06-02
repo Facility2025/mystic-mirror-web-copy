@@ -5,15 +5,21 @@ import FileCard from './FileCard';
 import FileUploadForm from './FileUploadForm';
 import NeuralBackground from './NeuralBackground';
 
-interface DashboardProps {
-  onLogout: () => void;
+interface UserData {
+  email: string;
+  role: 'admin' | 'usuario';
 }
 
-const Dashboard = ({ onLogout }: DashboardProps) => {
-  // Simulando dados do usuário - em um app real, isso viria de um contexto de autenticação
-  const currentUser = {
+interface DashboardProps {
+  onLogout: () => void;
+  userData: UserData | null;
+}
+
+const Dashboard = ({ onLogout, userData }: DashboardProps) => {
+  // Usar dados do usuário passados como prop ou dados padrão como fallback
+  const currentUser = userData || {
     email: 'usuario@example.com',
-    role: 'admin' // ou 'usuario'
+    role: 'usuario' as const
   };
 
   const [isUploadFormOpen, setIsUploadFormOpen] = useState(false);
