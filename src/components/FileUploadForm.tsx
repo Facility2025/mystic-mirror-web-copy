@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Upload, X, Link as LinkIcon, Image } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -168,7 +169,7 @@ const FileUploadForm = ({
     return <div className="min-h-[80px] flex items-center justify-center">
         <div className="text-center">
           <Image className="h-6 w-6 text-gray-400 mx-auto mb-1" />
-          <p className="text-gray-400 text-sm">Ctrl+V para colar imagem</p>
+          <p className="text-gray-400 text-sm">Ctrl+V para colar imagem ou insira link de imagem</p>
         </div>
       </div>;
   };
@@ -198,28 +199,31 @@ const FileUploadForm = ({
           {/* Campo para Link */}
           <div>
             <label htmlFor="link" className="block text-sm font-medium text-gray-300 mb-2">
-              Link do Arquivo
+              Link do Arquivo/Imagem
             </label>
-            <Input id="link" type="url" value={linkUrl} onChange={handleLinkChange} className="bg-slate-700 border-slate-600 text-white" placeholder="Cole o link do arquivo (opcional)" />
+            <Input id="link" type="url" value={linkUrl} onChange={handleLinkChange} className="bg-slate-700 border-slate-600 text-white" placeholder="Cole o link do arquivo ou imagem" />
             {linkUrl && <p className="text-green-400 text-xs mt-1">
                 <LinkIcon className="h-3 w-3 inline mr-1" />
-                {isImageUrl(linkUrl) ? 'Link de imagem adicionado' : 'Link adicionado'}
+                {isImageUrl(linkUrl) ? 'Link de imagem adicionado - visualize abaixo' : 'Link adicionado'}
               </p>}
           </div>
 
           {/* Área para colar imagem com preview retangular */}
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-2">
-              Colar Imagem
+              Preview da Imagem
             </label>
             <div onPaste={handlePaste} className="w-full bg-slate-700 border-2 border-dashed border-slate-600 rounded-lg cursor-pointer hover:border-slate-500 transition-colors" tabIndex={0}>
               {renderPasteAreaContent()}
             </div>
+            <p className="text-xs text-gray-400 mt-1">
+              Cole uma imagem com Ctrl+V ou insira um link de imagem acima
+            </p>
           </div>
 
           {/* Seleção de arquivo com botão preto */}
           <div>
-            <label htmlFor="file" className="block text-sm font-medium text-gray-300 mb-2">Selecione um arquivo, cole uma imagem ou insira um link</label>
+            <label htmlFor="file" className="block text-sm font-medium text-gray-300 mb-2">Ou selecione um arquivo</label>
             <div className="space-y-3">
               <input id="file" type="file" onChange={handleFileSelect} className="hidden" accept="*/*" />
               <Button type="button" onClick={() => document.getElementById('file')?.click()} className="w-full bg-black hover:bg-gray-900 text-white border-gray-700">
@@ -232,7 +236,7 @@ const FileUploadForm = ({
             </div>
           </div>
 
-          {!hasValidInput && <p className="text-xs text-slate-50">Selecione um arquivo</p>}
+          {!hasValidInput && <p className="text-xs text-slate-50">Adicione um nome e selecione um arquivo, cole uma imagem ou insira um link</p>}
 
           <div className="flex space-x-3 pt-4">
             <Button type="button" onClick={handleClose} variant="outline" className={`flex-1 border-gray-700 text-white transition-colors ${cancelButtonClicked ? 'bg-red-500 hover:bg-red-600 border-red-500' : 'bg-black hover:bg-gray-900 border-gray-700'}`}>
