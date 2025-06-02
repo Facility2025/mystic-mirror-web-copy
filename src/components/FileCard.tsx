@@ -46,7 +46,26 @@ const FileCard = ({ id, name, description, date, type, icon, fileUrl, fileType, 
     }
   };
 
+  const isImage = () => {
+    if (!fileType) return false;
+    return fileType.startsWith('image/') || 
+           (isLink && fileUrl && (fileUrl.includes('.jpg') || fileUrl.includes('.jpeg') || fileUrl.includes('.png') || fileUrl.includes('.gif')));
+  };
+
   const renderFilePreview = () => {
+    if (isImage() && fileUrl && !imageError) {
+      return (
+        <AspectRatio ratio={16 / 9} className="w-full">
+          <img 
+            src={fileUrl}
+            alt={name}
+            className="w-full h-full object-cover rounded"
+            onError={() => setImageError(true)}
+          />
+        </AspectRatio>
+      );
+    }
+
     return (
       <div className="text-center flex items-center justify-center h-full">
         <File className="h-16 w-16 text-gray-400" />
