@@ -74,7 +74,7 @@ const FileCard = ({ id, name, description, date, type, icon, fileUrl, fileType, 
   };
 
   return (
-    <div className="bg-slate-800 border border-slate-700 rounded-lg p-4 hover:border-purple-500 transition-colors">
+    <div className="bg-gradient-to-br from-black/95 to-gray-900/95 border border-purple-500/50 rounded-lg p-4 hover:border-purple-400 transition-all duration-300 backdrop-blur-md shadow-2xl">
       <div className="flex justify-between items-center mb-4">
         <span className="bg-green-500 text-black text-xs font-bold px-2 py-1 rounded">
           {id}
