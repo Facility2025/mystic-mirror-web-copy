@@ -1,5 +1,6 @@
+
 import React, { useState } from 'react';
-import { Download, Edit, Eye } from 'lucide-react';
+import { Download, Edit, File } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
 
@@ -42,81 +43,9 @@ const FileCard = ({ id, name, description, date, type, icon, fileUrl, fileType, 
   };
 
   const renderFilePreview = () => {
-    if (!fileUrl) {
-      return (
-        <div className="text-center flex items-center justify-center h-full">
-          {icon}
-        </div>
-      );
-    }
-
-    // Se for um link, tentamos determinar o tipo pelo URL
-    if (isLink || fileType === 'link') {
-      const url = fileUrl.toLowerCase();
-      if (url.includes('.jpg') || url.includes('.jpeg') || url.includes('.png') || url.includes('.gif') || url.includes('.webp')) {
-        return (
-          <AspectRatio ratio={16 / 9} className="w-full">
-            <img 
-              src={fileUrl} 
-              alt={name}
-              className="w-full h-full object-cover rounded"
-              onError={() => setImageError(true)}
-            />
-          </AspectRatio>
-        );
-      }
-      
-      return (
-        <div className="text-center flex items-center justify-center h-full">
-          {icon}
-          <div className="ml-2">
-            <p className="text-xs text-gray-400">Link</p>
-          </div>
-        </div>
-      );
-    }
-
-    if (fileType?.startsWith('image/') && !imageError) {
-      return (
-        <AspectRatio ratio={16 / 9} className="w-full">
-          <img 
-            src={fileUrl} 
-            alt={name}
-            className="w-full h-full object-cover rounded"
-            onError={() => setImageError(true)}
-          />
-        </AspectRatio>
-      );
-    }
-
-    if (fileType?.startsWith('video/')) {
-      return (
-        <AspectRatio ratio={16 / 9} className="w-full">
-          <video 
-            src={fileUrl}
-            className="w-full h-full object-cover rounded"
-            controls
-            preload="metadata"
-          />
-        </AspectRatio>
-      );
-    }
-
-    if (fileType === 'application/pdf') {
-      return (
-        <AspectRatio ratio={16 / 9} className="w-full">
-          <iframe
-            src={fileUrl}
-            className="w-full h-full rounded border-0"
-            title={name}
-          />
-        </AspectRatio>
-      );
-    }
-
     return (
       <div className="text-center flex items-center justify-center h-full">
-        {icon}
+        <File className="h-16 w-16 text-gray-400" />
       </div>
     );
   };
@@ -129,7 +58,7 @@ const FileCard = ({ id, name, description, date, type, icon, fileUrl, fileType, 
         </span>
         <div className="text-right">
           <div className="flex items-center justify-end space-x-2 mb-2">
-            {icon}
+            <File className="h-8 w-8 text-gray-400" />
             <span className={`text-white text-xs px-2 py-1 rounded ${getTypeColor(type)}`}>
               {type}
             </span>
@@ -151,9 +80,11 @@ const FileCard = ({ id, name, description, date, type, icon, fileUrl, fileType, 
 
       <div className="flex space-x-2 mt-4">
         <div className="flex-1 relative">
+          {/* Fundo negro para efeito de papel destacado */}
+          <div className="absolute inset-0 bg-black rounded translate-x-1 translate-y-1 z-0"></div>
           <Button 
             onClick={handleVisualize}
-            className="w-full bg-green-500 hover:bg-green-600 text-black text-sm border-2 border-black shadow-[4px_4px_0px_0px_#000000] hover:shadow-[6px_6px_0px_0px_#000000] transform hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all duration-200"
+            className="flex-1 bg-green-500 hover:bg-green-600 text-black text-sm relative z-10 w-full transform hover:translate-x-0.5 hover:translate-y-0.5 transition-transform duration-200"
             disabled={!fileUrl}
           >
             Visualizar
@@ -162,14 +93,14 @@ const FileCard = ({ id, name, description, date, type, icon, fileUrl, fileType, 
         <Button 
           variant="outline" 
           size="sm" 
-          className="bg-gradient-to-r from-slate-900 to-blue-200 text-white hover:from-slate-800 hover:to-blue-300 border-slate-600"
+          className="bg-gradient-to-r from-black/90 to-blue-300/30 text-white hover:from-black hover:to-blue-400/40 border-slate-600"
         >
           <Download className="h-4 w-4" />
         </Button>
         <Button 
           variant="outline" 
           size="sm" 
-          className="bg-gradient-to-r from-slate-900 to-blue-200 text-white hover:from-slate-800 hover:to-blue-300 border-slate-600"
+          className="bg-gradient-to-r from-black/90 to-blue-300/30 text-white hover:from-black hover:to-blue-400/40 border-slate-600"
         >
           <Edit className="h-4 w-4" />
         </Button>
