@@ -47,35 +47,75 @@ const FileCard = ({ id, name, description, date, type, icon, fileUrl, fileType, 
   };
 
   const isImage = () => {
-    if (!fileType) return false;
-    return fileType.startsWith('image/') || 
-           (isLink && fileUrl && (fileUrl.includes('.jpg') || fileUrl.includes('.jpeg') || fileUrl.includes('.png') || fileUrl.includes('.gif')));
+    if (!fileType && !fileUrl) return false;
+    
+    // Verifica por tipo MIME
+    if (fileType && fileType.startsWith('image/')) return true;
+    
+    // Verifica por extensão na URL
+    if (fileUrl) {
+      const url = fileUrl.toLowerCase();
+      return url.includes('.jpg') || url.includes('.jpeg') || url.includes('.png') || 
+             url.includes('.gif') || url.includes('.webp') || url.includes('.svg') || 
+             url.includes('.bmp') || url.includes('.ico');
+    }
+    
+    return false;
   };
 
   const isPDF = () => {
-    if (!fileType) return false;
-    return fileType === 'application/pdf' || 
-           (isLink && fileUrl && fileUrl.includes('.pdf'));
+    if (!fileType && !fileUrl) return false;
+    
+    // Verifica por tipo MIME
+    if (fileType && fileType === 'application/pdf') return true;
+    
+    // Verifica por extensão na URL
+    if (fileUrl) {
+      return fileUrl.toLowerCase().includes('.pdf');
+    }
+    
+    return false;
   };
 
   const isTextDocument = () => {
-    if (!fileType) return false;
-    return fileType.startsWith('text/') || 
-           fileType.includes('document') ||
-           fileType.includes('word') ||
-           (isLink && fileUrl && (fileUrl.includes('.txt') || fileUrl.includes('.doc') || fileUrl.includes('.docx')));
+    if (!fileType && !fileUrl) return false;
+    
+    // Verifica por tipo MIME
+    if (fileType) {
+      return fileType.startsWith('text/') || 
+             fileType.includes('document') ||
+             fileType.includes('word') ||
+             fileType.includes('spreadsheet') ||
+             fileType.includes('presentation');
+    }
+    
+    // Verifica por extensão na URL
+    if (fileUrl) {
+      const url = fileUrl.toLowerCase();
+      return url.includes('.txt') || url.includes('.doc') || url.includes('.docx') ||
+             url.includes('.xls') || url.includes('.xlsx') || url.includes('.ppt') ||
+             url.includes('.pptx') || url.includes('.rtf');
+    }
+    
+    return false;
   };
 
   const renderFilePreview = () => {
-    // Imagens
-    if (isImage() && fileUrl && !imageError) {
+    // Se há fileUrl e é uma imagem, sempre tenta mostrar
+    if (fileUrl && isImage() && !imageError) {
       return (
         <AspectRatio ratio={16 / 9} className="w-full">
           <img 
             src={fileUrl}
             alt={name}
             className="w-full h-full object-cover rounded"
-            onError={() => setImageError(true)}
+            onError={() => {
+              console.log('Erro ao carregar imagem:', fileUrl);
+              setImageError(true);
+            }}
+            onLoad={() => {
+              console.log('Imagem carregada com sucesso:', fileUrl);
+            }}
           />
         </AspectRatio>
       );
@@ -105,12 +145,19 @@ const FileCard = ({ id, name, description, date, type, icon, fileUrl, fileType, 
       );
     }
 
-    // Arquivo padrão
+    // Arquivo padrão - agora com mais informações sobre o que foi enviado
     return (
       <AspectRatio ratio={16 / 9} className="w-full">
-        <div className="w-full h-full bg-gray-100 rounded flex flex-col items-center justify-center">
+        <div className="w-full h-full bg-gray-100 rounded flex flex-col items-center justify-center p-2">
           <File className="h-12 w-12 text-gray-600 mb-2" />
-          <span className="text-sm font-medium text-gray-700">FILE</span>
+          <span className="text-sm font-medium text-gray-700 text-center">
+            {fileType ? fileType.split('/')[0].toUpperCase() : 'FILE'}
+          </span>
+          {fileUrl && (
+            <span className="text-xs text-gray-500 mt-1 text-center truncate w-full">
+              {isLink ? 'Link' : 'Upload'}
+            </span>
+          )}
         </div>
       </AspectRatio>
     );

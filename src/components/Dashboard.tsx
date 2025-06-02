@@ -80,6 +80,8 @@ const Dashboard = ({ onLogout }: DashboardProps) => {
   ]);
 
   const getFileTypeFromData = (fileData: { name: string; file: File | null; fileUrl: string; fileType: string; isLink?: boolean }) => {
+    console.log('Processando arquivo:', fileData);
+    
     if (fileData.isLink) {
       // Para links, tentamos determinar o tipo pela URL
       const url = fileData.fileUrl.toLowerCase();
@@ -87,7 +89,7 @@ const Dashboard = ({ onLogout }: DashboardProps) => {
         return 'VIDEO' as const;
       } else if (url.includes('.pdf')) {
         return 'PDF' as const;
-      } else if (url.includes('.jpg') || url.includes('.jpeg') || url.includes('.png') || url.includes('.gif')) {
+      } else if (url.includes('.jpg') || url.includes('.jpeg') || url.includes('.png') || url.includes('.gif') || url.includes('.webp') || url.includes('.svg')) {
         return 'PDF' as const; // Usando PDF para imagens para manter compatibilidade
       } else if (url.includes('.txt') || url.includes('.doc') || url.includes('.docx')) {
         return 'TEXT' as const;
@@ -97,6 +99,8 @@ const Dashboard = ({ onLogout }: DashboardProps) => {
     } else if (fileData.file) {
       // Para arquivos, usamos o tipo MIME
       const mimeType = fileData.fileType;
+      console.log('Tipo MIME do arquivo:', mimeType);
+      
       if (mimeType.startsWith('image/')) {
         return 'PDF' as const; // Usando PDF para imagens para manter compatibilidade
       } else if (mimeType === 'application/pdf') {
@@ -114,6 +118,8 @@ const Dashboard = ({ onLogout }: DashboardProps) => {
   };
 
   const handleFileUpload = (fileData: { name: string; description: string; file: File | null; fileUrl: string; fileType: string; isLink?: boolean }) => {
+    console.log('Recebendo arquivo para upload:', fileData);
+    
     const type = getFileTypeFromData(fileData);
 
     // Gerar novo ID baseado no próximo número disponível
@@ -133,9 +139,11 @@ const Dashboard = ({ onLogout }: DashboardProps) => {
       isLink: fileData.isLink
     };
 
+    console.log('Arquivo criado:', newFile);
+
     // Adicionar novo arquivo no início da lista para mostrar os mais recentes primeiro
     setFiles([newFile, ...files]);
-    console.log('Novo arquivo adicionado:', newFile);
+    console.log('Lista de arquivos atualizada');
   };
 
   return (
