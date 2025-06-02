@@ -88,7 +88,7 @@ const LoginFormCard = ({ onLogin, onRegisterClick }: LoginFormCardProps) => {
               <button 
                 type="button"
                 onClick={onRegisterClick}
-                className="text-green-400 hover:text-green-300"
+                className="text-green-400 hover:text-green-300 animate-pulse"
               >
                 Cadastre-se
               </button>
