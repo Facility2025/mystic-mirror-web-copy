@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Download, Edit, File, FileText, Image as ImageIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
+import ImageViewerModal from './ImageViewerModal';
+import EditFileModal from './EditFileModal';
 
 interface FileCardProps {
   id: string;
@@ -14,6 +16,7 @@ interface FileCardProps {
   fileType?: string;
   isLink?: boolean;
   previewImage?: string;
+  onUpdate?: (id: string, name: string, description: string) => void;
 }
 
 const FileCard = ({
@@ -26,10 +29,13 @@ const FileCard = ({
   fileUrl,
   fileType,
   isLink,
-  previewImage
+  previewImage,
+  onUpdate
 }: FileCardProps) => {
   const [imageError, setImageError] = useState(false);
   const [isClicked, setIsClicked] = useState(false);
+  const [isImageViewerOpen, setIsImageViewerOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   const getTypeColor = (type: string) => {
     switch (type) {
@@ -59,6 +65,37 @@ const FileCard = ({
         // Se for arquivo local, também abre em nova aba
         window.open(fileUrl, '_blank');
       }
+    }
+  };
+
+  const handleImageClick = () => {
+    const imageUrl = previewImage || fileUrl;
+    if (imageUrl && (isImage() || previewImage)) {
+      setIsImageViewerOpen(true);
+    } else {
+      handleVisualize();
+    }
+  };
+
+  const handleDownload = () => {
+    const imageUrl = previewImage || fileUrl;
+    if (imageUrl) {
+      const link = document.createElement('a');
+      link.href = imageUrl;
+      link.download = name || 'arquivo';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  };
+
+  const handleEdit = () => {
+    setIsEditModalOpen(true);
+  };
+
+  const handleSaveEdit = (newName: string, newDescription: string) => {
+    if (onUpdate) {
+      onUpdate(id, newName, newDescription);
     }
   };
 
@@ -113,7 +150,8 @@ const FileCard = ({
           <img 
             src={previewImage} 
             alt={name} 
-            className="w-full h-full object-cover rounded"
+            className="w-full h-full object-cover rounded cursor-pointer hover:opacity-80 transition-opacity"
+            onClick={handleImageClick}
             onError={() => {
               console.log('Erro ao carregar preview image:', previewImage);
               setImageError(true);
@@ -133,7 +171,8 @@ const FileCard = ({
           <img 
             src={fileUrl} 
             alt={name} 
-            className="w-full h-full object-cover rounded"
+            className="w-full h-full object-cover rounded cursor-pointer hover:opacity-80 transition-opacity"
+            onClick={handleImageClick}
             onError={() => {
               console.log('Erro ao carregar imagem:', fileUrl);
               setImageError(true);
@@ -185,56 +224,76 @@ const FileCard = ({
   };
 
   return (
-    <div className="bg-gradient-to-br from-black to-purple-900 border border-purple-500/50 rounded-lg p-4 hover:border-purple-400 transition-all duration-300 backdrop-blur-md shadow-2xl">
-      <div className="flex justify-between items-center mb-4">
-        <span className="bg-green-500 text-black text-xs font-bold px-2 py-1 rounded">
-          {id}
-        </span>
-        <File className="h-6 w-6 text-gray-400" />
-      </div>
+    <>
+      <div className="bg-gradient-to-br from-black to-purple-900 border border-purple-500/50 rounded-lg p-4 hover:border-purple-400 transition-all duration-300 backdrop-blur-md shadow-2xl">
+        <div className="flex justify-between items-center mb-4">
+          <span className="bg-green-500 text-black text-xs font-bold px-2 py-1 rounded">
+            {id}
+          </span>
+          <File className="h-6 w-6 text-gray-400" />
+        </div>
 
-      <div className="flex-1 mb-4 bg-slate-700 rounded overflow-hidden">
-        {renderFilePreview()}
-      </div>
+        <div className="flex-1 mb-4 bg-slate-700 rounded overflow-hidden">
+          {renderFilePreview()}
+        </div>
 
-      <div className="space-y-2">
-        <h3 className="text-white font-semibold">{name}</h3>
-        <p className={`text-sm ${description ? 'text-gray-400' : 'text-red-500 border border-red-500 rounded px-2 py-1'}`}>
-          {description || 'Descrição em branco'}
-        </p>
-        <p className="text-gray-500 text-xs">{date}</p>
-      </div>
+        <div className="space-y-2">
+          <h3 className="text-white font-semibold">{name}</h3>
+          <p className={`text-sm ${description ? 'text-gray-400' : 'text-red-500 border border-red-500 rounded px-2 py-1'}`}>
+            {description || 'Descrição em branco'}
+          </p>
+          <p className="text-gray-500 text-xs">{date}</p>
+        </div>
 
-      <div className="flex space-x-2 mt-4">
-        <div className="flex-1 relative">
+        <div className="flex space-x-2 mt-4">
+          <div className="flex-1 relative">
+            <Button 
+              onClick={handleVisualize}
+              className={`flex-1 text-white text-sm w-full transition-all duration-300 ${
+                isClicked 
+                  ? 'bg-red-500 hover:bg-red-600 transform translate-x-2 translate-y-2' 
+                  : 'bg-black hover:bg-gray-900'
+              }`}
+              disabled={!fileUrl}
+            >
+              Visualizar
+            </Button>
+          </div>
           <Button 
-            onClick={handleVisualize}
-            className={`flex-1 text-white text-sm w-full transition-all duration-300 ${
-              isClicked 
-                ? 'bg-red-500 hover:bg-red-600 transform translate-x-2 translate-y-2' 
-                : 'bg-black hover:bg-gray-900'
-            }`}
-            disabled={!fileUrl}
+            variant="outline" 
+            size="sm" 
+            onClick={handleDownload}
+            className="bg-black text-white hover:bg-gray-900 border-gray-700 hover:border-gray-600"
+            disabled={!fileUrl && !previewImage}
           >
-            Visualizar
+            <Download className="h-4 w-4 text-white" />
+          </Button>
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={handleEdit}
+            className="bg-black text-white hover:bg-gray-900 border-gray-700 hover:border-gray-600"
+          >
+            <Edit className="h-4 w-4 text-white" />
           </Button>
         </div>
-        <Button 
-          variant="outline" 
-          size="sm" 
-          className="bg-black text-white hover:bg-gray-900 border-gray-700 hover:border-gray-600"
-        >
-          <Download className="h-4 w-4 text-white" />
-        </Button>
-        <Button 
-          variant="outline" 
-          size="sm" 
-          className="bg-black text-white hover:bg-gray-900 border-gray-700 hover:border-gray-600"
-        >
-          <Edit className="h-4 w-4 text-white" />
-        </Button>
       </div>
-    </div>
+
+      <ImageViewerModal
+        isOpen={isImageViewerOpen}
+        onClose={() => setIsImageViewerOpen(false)}
+        imageUrl={previewImage || fileUrl || ''}
+        imageName={name}
+      />
+
+      <EditFileModal
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        fileName={name}
+        fileDescription={description}
+        onSave={handleSaveEdit}
+      />
+    </>
   );
 };
 

@@ -146,6 +146,16 @@ const Dashboard = ({ onLogout }: DashboardProps) => {
     console.log('Lista de arquivos atualizada');
   };
 
+  const handleFileUpdate = (fileId: string, newName: string, newDescription: string) => {
+    setFiles(prevFiles => 
+      prevFiles.map(file => 
+        file.id === fileId 
+          ? { ...file, name: newName, description: newDescription }
+          : file
+      )
+    );
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-black relative overflow-hidden">
       <NeuralBackground />
@@ -203,6 +213,7 @@ const Dashboard = ({ onLogout }: DashboardProps) => {
                 fileType={(file as any).fileType}
                 isLink={(file as any).isLink}
                 previewImage={(file as any).previewImage}
+                onUpdate={handleFileUpdate}
               />
             </div>
           ))}
