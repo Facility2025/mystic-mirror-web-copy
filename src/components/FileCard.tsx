@@ -13,6 +13,7 @@ interface FileCardProps {
   fileUrl?: string;
   fileType?: string;
   isLink?: boolean;
+  previewImage?: string;
 }
 
 const FileCard = ({
@@ -24,7 +25,8 @@ const FileCard = ({
   icon,
   fileUrl,
   fileType,
-  isLink
+  isLink,
+  previewImage
 }: FileCardProps) => {
   const [imageError, setImageError] = useState(false);
   const [isClicked, setIsClicked] = useState(false);
@@ -104,6 +106,26 @@ const FileCard = ({
   };
 
   const renderFilePreview = () => {
+    // Se há previewImage (imagem colada no formulário), sempre mostra ela em formato retangular
+    if (previewImage && !imageError) {
+      return (
+        <AspectRatio ratio={16 / 9} className="w-full">
+          <img 
+            src={previewImage} 
+            alt={name} 
+            className="w-full h-full object-cover rounded"
+            onError={() => {
+              console.log('Erro ao carregar preview image:', previewImage);
+              setImageError(true);
+            }}
+            onLoad={() => {
+              console.log('Preview image carregada com sucesso:', previewImage);
+            }}
+          />
+        </AspectRatio>
+      );
+    }
+
     // Se há fileUrl e é uma imagem, sempre tenta mostrar em formato retangular
     if (fileUrl && isImage() && !imageError) {
       return (

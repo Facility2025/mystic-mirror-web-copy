@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Upload, LogOut, File } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -117,7 +116,7 @@ const Dashboard = ({ onLogout }: DashboardProps) => {
     }
   };
 
-  const handleFileUpload = (fileData: { name: string; description: string; file: File | null; fileUrl: string; fileType: string; isLink?: boolean }) => {
+  const handleFileUpload = (fileData: { name: string; description: string; file: File | null; fileUrl: string; fileType: string; isLink?: boolean; previewImage?: string }) => {
     console.log('Recebendo arquivo para upload:', fileData);
     
     const type = getFileTypeFromData(fileData);
@@ -136,7 +135,8 @@ const Dashboard = ({ onLogout }: DashboardProps) => {
       icon: <File className="h-8 w-8 text-gray-400" />,
       fileUrl: fileData.fileUrl,
       fileType: fileData.fileType,
-      isLink: fileData.isLink
+      isLink: fileData.isLink,
+      previewImage: fileData.previewImage
     };
 
     console.log('Arquivo criado:', newFile);
@@ -202,6 +202,7 @@ const Dashboard = ({ onLogout }: DashboardProps) => {
                 fileUrl={(file as any).fileUrl}
                 fileType={(file as any).fileType}
                 isLink={(file as any).isLink}
+                previewImage={(file as any).previewImage}
               />
             </div>
           ))}
