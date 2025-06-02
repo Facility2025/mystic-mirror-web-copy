@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Upload, X, Link as LinkIcon, Image } from 'lucide-react';
+import { Upload, X, Image } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -28,27 +28,12 @@ const FileUploadForm = ({
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [linkUrl, setLinkUrl] = useState('');
   const [pastedImage, setPastedImage] = useState<File | null>(null);
   const [cancelButtonClicked, setCancelButtonClicked] = useState(false);
-
-  // Função para verificar se o link é de uma imagem
-  const isImageUrl = (url: string) => {
-    const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg', '.bmp', '.ico'];
-    const lowerUrl = url.toLowerCase();
-    return imageExtensions.some(ext => lowerUrl.includes(ext)) || 
-           lowerUrl.includes('unsplash.com') || 
-           lowerUrl.includes('imgur.com') ||
-           lowerUrl.includes('images.') ||
-           lowerUrl.includes('/image/') ||
-           lowerUrl.includes('cdn.') ||
-           lowerUrl.includes('static.');
-  };
 
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0] || null;
     setSelectedFile(file);
-    setLinkUrl(''); // Limpa o link se arquivo for selecionado
     setPastedImage(null); // Limpa imagem colada
   };
 
@@ -62,41 +47,20 @@ const FileUploadForm = ({
           if (file) {
             setPastedImage(file);
             setSelectedFile(null); // Limpa arquivo selecionado
-            setLinkUrl(''); // Limpa link
           }
         }
       }
     }
   };
 
-  const handleLinkChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const url = event.target.value;
-    setLinkUrl(url);
-    if (url) {
-      setSelectedFile(null); // Limpa arquivo se link for inserido
-      setPastedImage(null); // Limpa imagem colada
-      
-      // Se for um link de imagem e não tiver descrição, adiciona automaticamente
-      if (isImageUrl(url) && !description) {
-        setDescription('Imagem');
-      }
-    }
-  };
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (name && (selectedFile || pastedImage || linkUrl)) {
+    if (name && (selectedFile || pastedImage)) {
       let fileUrl = '';
       let fileType = '';
       let file = null;
-      let isLink = false;
 
-      if (linkUrl) {
-        fileUrl = linkUrl;
-        // Se for um link de imagem, define como image/jpeg para aparecer como imagem
-        fileType = isImageUrl(linkUrl) ? 'image/jpeg' : 'link';
-        isLink = true;
-      } else if (pastedImage) {
+      if (pastedImage) {
         fileUrl = URL.createObjectURL(pastedImage);
         fileType = pastedImage.type;
         file = pastedImage;
@@ -112,14 +76,13 @@ const FileUploadForm = ({
         file,
         fileUrl,
         fileType,
-        isLink
+        isLink: false
       });
 
       // Reset form
       setName('');
       setDescription('');
       setSelectedFile(null);
-      setLinkUrl('');
       setPastedImage(null);
       setCancelButtonClicked(false);
       onClose();
@@ -132,14 +95,13 @@ const FileUploadForm = ({
       setName('');
       setDescription('');
       setSelectedFile(null);
-      setLinkUrl('');
       setPastedImage(null);
       setCancelButtonClicked(false);
       onClose();
     }, 200);
   };
 
-  const hasValidInput = name && (selectedFile || pastedImage || linkUrl);
+  const hasValidInput = name && (selectedFile || pastedImage);
 
   // Função para verificar se é uma imagem
   const isImage = (file: File) => {
@@ -148,7 +110,7 @@ const FileUploadForm = ({
 
   // Função para renderizar a imagem na área de colar com formato retangular
   const renderPasteAreaContent = () => {
-    // Prioridade: 1. Imagem colada, 2. Arquivo selecionado (se for imagem), 3. Link de imagem, 4. Placeholder
+    // Prioridade: 1. Imagem colada, 2. Arquivo selecionado (se for imagem)
     const imageToShow = pastedImage || (selectedFile && isImage(selectedFile) ? selectedFile : null);
     
     if (imageToShow) {
@@ -157,19 +119,10 @@ const FileUploadForm = ({
         </AspectRatio>;
     }
     
-    // Se há um link de imagem, mostra a imagem do link
-    if (linkUrl && isImageUrl(linkUrl)) {
-      return <AspectRatio ratio={16 / 9} className="w-full">
-          <img src={linkUrl} alt="Imagem do link" className="w-full h-full object-cover rounded" onError={(e) => {
-            console.log('Erro ao carregar imagem do link');
-          }} />
-        </AspectRatio>;
-    }
-    
     return <div className="min-h-[80px] flex items-center justify-center">
         <div className="text-center">
           <Image className="h-6 w-6 text-gray-400 mx-auto mb-1" />
-          <p className="text-gray-400 text-sm">Ctrl+V para colar imagem ou insira link de imagem</p>
+          <p className="text-gray-400 text-sm">Ctrl+V para colar imagem</p>
         </div>
       </div>;
   };
@@ -196,18 +149,6 @@ const FileUploadForm = ({
             <Textarea id="description" value={description} onChange={e => setDescription(e.target.value)} className="bg-slate-700 border-slate-600 text-white resize-none" placeholder="Digite uma descrição (opcional)" rows={3} />
           </div>
 
-          {/* Campo para Link */}
-          <div>
-            <label htmlFor="link" className="block text-sm font-medium text-gray-300 mb-2">
-              Link do Arquivo/Imagem
-            </label>
-            <Input id="link" type="url" value={linkUrl} onChange={handleLinkChange} className="bg-slate-700 border-slate-600 text-white" placeholder="Cole o link do arquivo ou imagem" />
-            {linkUrl && <p className="text-green-400 text-xs mt-1">
-                <LinkIcon className="h-3 w-3 inline mr-1" />
-                {isImageUrl(linkUrl) ? 'Link de imagem adicionado - visualize abaixo' : 'Link adicionado'}
-              </p>}
-          </div>
-
           {/* Área para colar imagem com preview retangular */}
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-2">
@@ -217,7 +158,7 @@ const FileUploadForm = ({
               {renderPasteAreaContent()}
             </div>
             <p className="text-xs text-gray-400 mt-1">
-              Cole uma imagem com Ctrl+V ou insira um link de imagem acima
+              Cole uma imagem com Ctrl+V
             </p>
           </div>
 
@@ -236,7 +177,7 @@ const FileUploadForm = ({
             </div>
           </div>
 
-          {!hasValidInput && <p className="text-xs text-slate-50">Adicione um nome e selecione um arquivo, cole uma imagem ou insira um link</p>}
+          {!hasValidInput && <p className="text-xs text-slate-50">Adicione um nome e selecione um arquivo ou cole uma imagem</p>}
 
           <div className="flex space-x-3 pt-4">
             <Button type="button" onClick={handleClose} variant="outline" className={`flex-1 border-gray-700 text-white transition-colors ${cancelButtonClicked ? 'bg-red-500 hover:bg-red-600 border-red-500' : 'bg-black hover:bg-gray-900 border-gray-700'}`}>
