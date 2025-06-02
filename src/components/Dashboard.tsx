@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Upload, LogOut, File } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -188,9 +189,9 @@ const Dashboard = ({ onLogout }: DashboardProps) => {
       </div>
 
       {/* Header */}
-      <header className="bg-purple-700 px-6 py-4 relative z-10">
+      <header className="bg-gradient-to-r from-black to-blue-200 px-6 py-4 relative z-10">
         <div className="flex justify-between items-center">
-          <h1 className="text-green-400 text-xl font-bold">Meus Arquivos e Acesso da Web</h1>
+          <h1 className="text-white text-xl font-bold">Meus Arquivos e Acesso da Web</h1>
           <Button 
             onClick={onLogout}
             variant="destructive" 
