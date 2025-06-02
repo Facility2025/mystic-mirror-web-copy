@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Download, Edit, File } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -52,18 +51,11 @@ const FileCard = ({ id, name, description, date, type, icon, fileUrl, fileType, 
 
   return (
     <div className="bg-slate-800 border border-slate-700 rounded-lg p-4 hover:border-purple-500 transition-colors">
-      <div className="flex justify-between items-start mb-4">
+      <div className="flex justify-between items-center mb-4">
         <span className="bg-green-500 text-black text-xs font-bold px-2 py-1 rounded">
           {id}
         </span>
-        <div className="text-right">
-          <div className="flex items-center justify-end space-x-2 mb-2">
-            <File className="h-8 w-8 text-gray-400" />
-            <span className={`text-white text-xs px-2 py-1 rounded ${getTypeColor(type)}`}>
-              {type}
-            </span>
-          </div>
-        </div>
+        <File className="h-6 w-6 text-gray-400" />
       </div>
 
       <div className="flex-1 mb-4 bg-slate-700 rounded overflow-hidden">
