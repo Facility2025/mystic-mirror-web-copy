@@ -158,10 +158,18 @@ const FileCard = ({ id, name, description, date, type, icon, fileUrl, fileType, 
         >
           Visualizar
         </Button>
-        <Button variant="outline" size="sm" className="border-slate-600 text-white hover:bg-slate-700">
+        <Button 
+          variant="outline" 
+          size="sm" 
+          className="bg-gradient-to-r from-slate-900 to-blue-200 text-white hover:from-slate-800 hover:to-blue-300 border-slate-600"
+        >
           <Download className="h-4 w-4" />
         </Button>
-        <Button variant="outline" size="sm" className="border-slate-600 text-white hover:bg-slate-700">
+        <Button 
+          variant="outline" 
+          size="sm" 
+          className="bg-gradient-to-r from-slate-900 to-blue-200 text-white hover:from-slate-800 hover:to-blue-300 border-slate-600"
+        >
           <Edit className="h-4 w-4" />
         </Button>
       </div>
