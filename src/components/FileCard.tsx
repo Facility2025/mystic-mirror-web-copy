@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Download, Edit, File } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -17,6 +18,7 @@ interface FileCardProps {
 
 const FileCard = ({ id, name, description, date, type, icon, fileUrl, fileType, isLink }: FileCardProps) => {
   const [imageError, setImageError] = useState(false);
+  const [isClicked, setIsClicked] = useState(false);
 
   const getTypeColor = (type: string) => {
     switch (type) {
@@ -36,6 +38,9 @@ const FileCard = ({ id, name, description, date, type, icon, fileUrl, fileType, 
   };
 
   const handleVisualize = () => {
+    setIsClicked(true);
+    setTimeout(() => setIsClicked(false), 300);
+    
     if (fileUrl) {
       window.open(fileUrl, '_blank');
     }
@@ -72,11 +77,13 @@ const FileCard = ({ id, name, description, date, type, icon, fileUrl, fileType, 
 
       <div className="flex space-x-2 mt-4">
         <div className="flex-1 relative">
-          {/* Fundo negro para efeito de papel destacado */}
-          <div className="absolute inset-0 bg-black rounded translate-x-1 translate-y-1 z-0"></div>
           <Button 
             onClick={handleVisualize}
-            className="flex-1 bg-green-500 hover:bg-green-600 text-black text-sm relative z-10 w-full transform hover:translate-x-0.5 hover:translate-y-0.5 transition-transform duration-200"
+            className={`flex-1 text-black text-sm w-full transition-all duration-300 ${
+              isClicked 
+                ? 'bg-red-500 hover:bg-red-600 transform translate-x-2 translate-y-2' 
+                : 'bg-green-500 hover:bg-green-600'
+            }`}
             disabled={!fileUrl}
           >
             Visualizar
