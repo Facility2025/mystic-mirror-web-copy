@@ -17,6 +17,7 @@ interface FileUploadFormProps {
     fileUrl: string;
     fileType: string;
     isLink?: boolean;
+    previewImage?: string; // Nova propriedade para imagem do preview
   }) => void;
 }
 
@@ -28,15 +29,14 @@ const FileUploadForm = ({
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [pastedImage, setPastedImage] = useState<File | null>(null);
-  const [linkUrl, setLinkUrl] = useState('');
+  const [pastedImage, setPastedImage] = useState<File | null>(null); // Para área de Preview
+  const [linkUrl, setLinkUrl] = useState(''); // Para campo de link
   const [cancelButtonClicked, setCancelButtonClicked] = useState(false);
 
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0] || null;
     setSelectedFile(file);
-    setPastedImage(null);
-    setLinkUrl('');
+    // Não limpar pastedImage e linkUrl - eles são independentes
   };
 
   const handlePaste = (event: React.ClipboardEvent) => {
@@ -47,9 +47,8 @@ const FileUploadForm = ({
         if (item.type.startsWith('image/')) {
           const file = item.getAsFile();
           if (file) {
-            setPastedImage(file);
-            setSelectedFile(null);
-            setLinkUrl('');
+            setPastedImage(file); // Só afeta a área de Preview
+            // Não limpar selectedFile e linkUrl - eles são independentes
           }
         }
       }
@@ -58,10 +57,7 @@ const FileUploadForm = ({
 
   const handleLinkChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setLinkUrl(e.target.value);
-    if (e.target.value) {
-      setSelectedFile(null);
-      setPastedImage(null);
-    }
+    // Não limpar selectedFile e pastedImage - eles são independentes
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -71,19 +67,33 @@ const FileUploadForm = ({
       let fileType = '';
       let file = null;
       let isLink = false;
+      let previewImage = '';
 
-      if (linkUrl) {
-        fileUrl = linkUrl;
-        fileType = 'link';
-        isLink = true;
-      } else if (pastedImage) {
-        fileUrl = URL.createObjectURL(pastedImage);
-        fileType = pastedImage.type;
-        file = pastedImage;
-      } else if (selectedFile) {
+      // Processar arquivo selecionado
+      if (selectedFile) {
         fileUrl = URL.createObjectURL(selectedFile);
         fileType = selectedFile.type;
         file = selectedFile;
+      }
+
+      // Processar link (independente do arquivo)
+      if (linkUrl) {
+        if (!fileUrl) { // Se não há arquivo, usar o link como fonte principal
+          fileUrl = linkUrl;
+          fileType = 'link';
+          isLink = true;
+        }
+      }
+
+      // Processar imagem da Preview (independente)
+      if (pastedImage) {
+        previewImage = URL.createObjectURL(pastedImage);
+        // Se não há arquivo nem link, usar a imagem do preview como fonte principal
+        if (!fileUrl) {
+          fileUrl = previewImage;
+          fileType = pastedImage.type;
+          file = pastedImage;
+        }
       }
 
       onSubmit({
@@ -92,7 +102,8 @@ const FileUploadForm = ({
         file,
         fileUrl,
         fileType,
-        isLink
+        isLink,
+        previewImage
       });
 
       // Reset form
@@ -121,40 +132,11 @@ const FileUploadForm = ({
 
   const hasValidInput = name && (selectedFile || pastedImage || linkUrl);
 
-  // Função para verificar se é uma imagem
-  const isImage = (file: File) => {
-    return file && file.type.startsWith('image/');
-  };
-
-  // Função para renderizar a imagem na área de colar com formato retangular
+  // Função para renderizar APENAS a imagem colada na área de Preview (independente)
   const renderPasteAreaContent = () => {
-    if (linkUrl) {
-      // Se há um link, tenta mostrar como imagem se for uma URL de imagem
-      const isImageUrl = linkUrl.toLowerCase().match(/\.(jpg|jpeg|png|gif|webp|svg|bmp|ico)$/);
-      if (isImageUrl) {
-        return <AspectRatio ratio={16 / 9} className="w-full">
-            <img src={linkUrl} alt="Imagem do link" className="w-full h-full object-cover rounded" onError={() => {}} />
-          </AspectRatio>;
-      } else {
-        return <AspectRatio ratio={16 / 9} className="w-full">
-            <div className="w-full h-full bg-blue-100 rounded flex flex-col items-center justify-center">
-              <div className="text-center">
-                <div className="h-12 w-12 bg-blue-500 rounded mx-auto mb-2 flex items-center justify-center">
-                  <span className="text-white font-bold">LINK</span>
-                </div>
-                <p className="text-blue-700 text-sm font-medium">Link do Site</p>
-              </div>
-            </div>
-          </AspectRatio>;
-      }
-    }
-    
-    // Prioridade: 1. Imagem colada, 2. Arquivo selecionado (se for imagem)
-    const imageToShow = pastedImage || (selectedFile && isImage(selectedFile) ? selectedFile : null);
-    
-    if (imageToShow) {
+    if (pastedImage) {
       return <AspectRatio ratio={16 / 9} className="w-full">
-          <img src={URL.createObjectURL(imageToShow)} alt="Imagem selecionada" className="w-full h-full object-cover rounded" />
+          <img src={URL.createObjectURL(pastedImage)} alt="Imagem colada" className="w-full h-full object-cover rounded" />
         </AspectRatio>;
     }
     
@@ -188,7 +170,7 @@ const FileUploadForm = ({
             <Textarea id="description" value={description} onChange={e => setDescription(e.target.value)} className="bg-slate-700 border-slate-600 text-white resize-none" placeholder="Digite uma descrição (opcional)" rows={3} />
           </div>
 
-          {/* Campo para link do site */}
+          {/* Campo para link do site - INDEPENDENTE */}
           <div>
             <label htmlFor="link" className="block text-sm font-medium text-gray-300 mb-2">
               Link do Site
@@ -199,22 +181,22 @@ const FileUploadForm = ({
               </p>}
           </div>
 
-          {/* Área para colar imagem com preview retangular */}
+          {/* Área para colar imagem - INDEPENDENTE */}
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-2">
-              Preview
+              Preview (Cole Imagem)
             </label>
             <div onPaste={handlePaste} className="w-full bg-slate-700 border-2 border-dashed border-slate-600 rounded-lg cursor-pointer hover:border-slate-500 transition-colors" tabIndex={0}>
               {renderPasteAreaContent()}
             </div>
             <p className="text-xs text-gray-400 mt-1">
-              Cole uma imagem com Ctrl+V ou adicione um link acima
+              Cole uma imagem com Ctrl+V nesta área
             </p>
           </div>
 
-          {/* Seleção de arquivo com botão preto */}
+          {/* Seleção de arquivo - INDEPENDENTE */}
           <div>
-            <label htmlFor="file" className="block text-sm font-medium text-gray-300 mb-2">Ou selecione um arquivo</label>
+            <label htmlFor="file" className="block text-sm font-medium text-gray-300 mb-2">Arquivo do Desktop</label>
             <div className="space-y-3">
               <input id="file" type="file" onChange={handleFileSelect} className="hidden" accept="*/*" />
               <Button type="button" onClick={() => document.getElementById('file')?.click()} className="w-full bg-black hover:bg-gray-900 text-white border-gray-700">
@@ -227,7 +209,7 @@ const FileUploadForm = ({
             </div>
           </div>
 
-          {!hasValidInput && <p className="text-xs text-slate-50">Adicione um nome e selecione um arquivo, cole uma imagem ou adicione um link</p>}
+          {!hasValidInput && <p className="text-xs text-slate-50">Adicione um nome e pelo menos um: arquivo, imagem colada ou link</p>}
 
           <div className="flex space-x-3 pt-4">
             <Button type="button" onClick={handleClose} variant="outline" className={`flex-1 border-gray-700 text-white transition-colors ${cancelButtonClicked ? 'bg-red-500 hover:bg-red-600 border-red-500' : 'bg-black hover:bg-gray-900 border-gray-700'}`}>
