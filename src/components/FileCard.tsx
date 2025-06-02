@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Download, Edit, Eye } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -151,13 +150,15 @@ const FileCard = ({ id, name, description, date, type, icon, fileUrl, fileType, 
       </div>
 
       <div className="flex space-x-2 mt-4">
-        <Button 
-          onClick={handleVisualize}
-          className="flex-1 bg-green-500 hover:bg-green-600 text-black text-sm"
-          disabled={!fileUrl}
-        >
-          Visualizar
-        </Button>
+        <div className="flex-1 relative">
+          <Button 
+            onClick={handleVisualize}
+            className="w-full bg-green-500 hover:bg-green-600 text-black text-sm border-2 border-black shadow-[4px_4px_0px_0px_#000000] hover:shadow-[6px_6px_0px_0px_#000000] transform hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all duration-200"
+            disabled={!fileUrl}
+          >
+            Visualizar
+          </Button>
+        </div>
         <Button 
           variant="outline" 
           size="sm" 
