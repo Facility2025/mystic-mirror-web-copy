@@ -101,7 +101,7 @@ const Dashboard = ({ onLogout }: DashboardProps) => {
     }
   };
 
-  const handleFileUpload = (fileData: { name: string; description: string; file: File | null }) => {
+  const handleFileUpload = (fileData: { name: string; description: string; file: File | null; fileUrl: string; fileType: string }) => {
     if (fileData.file) {
       const { type, icon } = getFileTypeFromExtension(fileData.file.name);
       const newId = String(files.length + 1).padStart(2, '0');
@@ -113,7 +113,9 @@ const Dashboard = ({ onLogout }: DashboardProps) => {
         description: fileData.description,
         date: currentDate,
         type: type,
-        icon: icon
+        icon: icon,
+        fileUrl: fileData.fileUrl,
+        fileType: fileData.fileType
       };
 
       setFiles([newFile, ...files]);
@@ -165,6 +167,8 @@ const Dashboard = ({ onLogout }: DashboardProps) => {
               date={file.date}
               type={file.type}
               icon={file.icon}
+              fileUrl={(file as any).fileUrl}
+              fileType={(file as any).fileType}
             />
           ))}
         </div>

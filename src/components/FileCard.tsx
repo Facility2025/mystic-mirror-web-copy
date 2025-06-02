@@ -10,9 +10,11 @@ interface FileCardProps {
   date: string;
   type: 'VIDEO' | 'TEXT' | 'PDF' | 'AI' | 'VPS';
   icon: React.ReactNode;
+  fileUrl?: string;
+  fileType?: string;
 }
 
-const FileCard = ({ id, name, description, date, type, icon }: FileCardProps) => {
+const FileCard = ({ id, name, description, date, type, icon, fileUrl, fileType }: FileCardProps) => {
   const getTypeColor = (type: string) => {
     switch (type) {
       case 'VIDEO':
@@ -28,6 +30,52 @@ const FileCard = ({ id, name, description, date, type, icon }: FileCardProps) =>
       default:
         return 'bg-gray-500';
     }
+  };
+
+  const renderFilePreview = () => {
+    if (!fileUrl) {
+      return (
+        <div className="text-center">
+          {icon}
+        </div>
+      );
+    }
+
+    if (fileType?.startsWith('image/')) {
+      return (
+        <img 
+          src={fileUrl} 
+          alt={name}
+          className="w-full h-full object-cover rounded"
+        />
+      );
+    }
+
+    if (fileType?.startsWith('video/')) {
+      return (
+        <video 
+          src={fileUrl}
+          className="w-full h-full object-cover rounded"
+          controls
+        />
+      );
+    }
+
+    if (fileType === 'application/pdf') {
+      return (
+        <iframe
+          src={fileUrl}
+          className="w-full h-full rounded"
+          title={name}
+        />
+      );
+    }
+
+    return (
+      <div className="text-center">
+        {icon}
+      </div>
+    );
   };
 
   return (
@@ -46,15 +94,15 @@ const FileCard = ({ id, name, description, date, type, icon }: FileCardProps) =>
         </div>
       </div>
 
-      <div className="flex-1 min-h-[120px] flex items-center justify-center mb-4">
-        <div className="text-center">
-          {icon}
-        </div>
+      <div className="flex-1 min-h-[120px] flex items-center justify-center mb-4 bg-slate-700 rounded">
+        {renderFilePreview()}
       </div>
 
       <div className="space-y-2">
         <h3 className="text-white font-semibold">{name}</h3>
-        <p className="text-gray-400 text-sm">{description}</p>
+        <p className={`text-sm ${description ? 'text-gray-400' : 'text-red-500 border border-red-500 rounded px-2 py-1'}`}>
+          {description || 'Descrição em branco'}
+        </p>
         <p className="text-gray-500 text-xs">{date}</p>
       </div>
 

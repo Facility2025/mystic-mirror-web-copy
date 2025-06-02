@@ -9,7 +9,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 interface FileUploadFormProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (fileData: { name: string; description: string; file: File | null }) => void;
+  onSubmit: (fileData: { name: string; description: string; file: File | null; fileUrl: string; fileType: string }) => void;
 }
 
 const FileUploadForm = ({ isOpen, onClose, onSubmit }: FileUploadFormProps) => {
@@ -25,7 +25,14 @@ const FileUploadForm = ({ isOpen, onClose, onSubmit }: FileUploadFormProps) => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (name && selectedFile) {
-      onSubmit({ name, description, file: selectedFile });
+      const fileUrl = URL.createObjectURL(selectedFile);
+      onSubmit({ 
+        name, 
+        description, 
+        file: selectedFile, 
+        fileUrl, 
+        fileType: selectedFile.type 
+      });
       // Reset form
       setName('');
       setDescription('');
@@ -58,10 +65,13 @@ const FileUploadForm = ({ isOpen, onClose, onSubmit }: FileUploadFormProps) => {
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="bg-slate-700 border-slate-600 text-white"
+              className={`bg-slate-700 text-white ${!name ? 'border-red-500' : 'border-slate-600'}`}
               placeholder="Digite o nome do arquivo"
               required
             />
+            {!name && (
+              <p className="text-red-500 text-xs mt-1">Campo obrigatório</p>
+            )}
           </div>
 
           <div>
@@ -94,13 +104,16 @@ const FileUploadForm = ({ isOpen, onClose, onSubmit }: FileUploadFormProps) => {
                 type="button"
                 onClick={() => document.getElementById('file')?.click()}
                 variant="outline"
-                className="w-full border-slate-600 text-white hover:bg-slate-700"
+                className={`w-full text-white hover:bg-slate-700 ${!selectedFile ? 'border-red-500 text-red-400' : 'border-slate-600'}`}
               >
                 <Upload className="h-4 w-4 mr-2" />
                 Escolher Arquivo do Desktop
               </Button>
+              {!selectedFile && (
+                <p className="text-red-500 text-xs">Arquivo obrigatório</p>
+              )}
               {selectedFile && (
-                <p className="text-sm text-green-400">
+                <p className="text-green-400 text-sm">
                   Arquivo selecionado: {selectedFile.name}
                 </p>
               )}
@@ -119,7 +132,7 @@ const FileUploadForm = ({ isOpen, onClose, onSubmit }: FileUploadFormProps) => {
             <Button
               type="submit"
               disabled={!name || !selectedFile}
-              className="flex-1 bg-green-500 hover:bg-green-600 text-black font-semibold"
+              className={`flex-1 font-semibold ${(!name || !selectedFile) ? 'bg-red-500 hover:bg-red-600 text-white' : 'bg-green-500 hover:bg-green-600 text-black'}`}
             >
               Enviar Arquivo
             </Button>
