@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Upload, LogOut, File } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -123,7 +122,9 @@ const Dashboard = ({ onLogout }: DashboardProps) => {
       type = 'AI' as const;
     }
 
-    const newId = String(files.length + 1).padStart(2, '0');
+    // Gerar novo ID baseado no próximo número disponível
+    const nextNumber = files.length + 1;
+    const newId = String(nextNumber).padStart(2, '0');
     const currentDate = new Date().toLocaleDateString('pt-BR');
     
     const newFile = {
@@ -138,7 +139,9 @@ const Dashboard = ({ onLogout }: DashboardProps) => {
       isLink: fileData.isLink
     };
 
+    // Adicionar novo arquivo no início da lista para mostrar os mais recentes primeiro
     setFiles([newFile, ...files]);
+    console.log('Novo arquivo adicionado:', newFile);
   };
 
   return (
@@ -208,7 +211,7 @@ const Dashboard = ({ onLogout }: DashboardProps) => {
         <div className="flex justify-between items-center mb-6">
           <Button 
             onClick={() => setIsUploadFormOpen(true)}
-            className="bg-green-500 hover:bg-green-600 text-black font-semibold transform hover:scale-105 hover:translate-y-[-2px] transition-all duration-300 shadow-lg hover:shadow-xl"
+            className="bg-green-500 hover:bg-green-600 text-black font-semibold transform hover:scale-105 hover:translate-y-[-2px] transition-all duration-300"
           >
             <Upload className="h-4 w-4 mr-2" />
             Enviar Arquivos
@@ -220,8 +223,8 @@ const Dashboard = ({ onLogout }: DashboardProps) => {
           <p className="text-gray-600">Exibindo 1-30 de {files.length + 37} arquivos</p>
         </div>
 
-        {/* Files Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {/* Files Grid - Responsivo */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6">
           {files.map((file, index) => (
             <div 
               key={file.id}
