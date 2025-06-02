@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Eye, EyeOff, Mail, Lock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import RegisterForm from './RegisterForm';
 
 interface LoginFormProps {
   onLogin: () => void;
@@ -12,9 +13,16 @@ const LoginForm = ({ onLogin }: LoginFormProps) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [isRegisterOpen, setIsRegisterOpen] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    onLogin();
+  };
+
+  const handleRegister = (userData: { name: string; email: string; password: string }) => {
+    console.log('Usuário registrado:', userData);
+    // Após o registro, fazer login automaticamente
     onLogin();
   };
 
@@ -85,7 +93,11 @@ const LoginForm = ({ onLogin }: LoginFormProps) => {
               </button>
               <p className="text-gray-400 text-sm">
                 Não tem uma conta?{' '}
-                <button className="text-green-400 hover:text-green-300">
+                <button 
+                  type="button"
+                  onClick={() => setIsRegisterOpen(true)}
+                  className="text-green-400 hover:text-green-300"
+                >
                   Cadastre-se
                 </button>
               </p>
@@ -99,6 +111,12 @@ const LoginForm = ({ onLogin }: LoginFormProps) => {
           </form>
         </div>
       </div>
+
+      <RegisterForm
+        isOpen={isRegisterOpen}
+        onClose={() => setIsRegisterOpen(false)}
+        onRegister={handleRegister}
+      />
     </div>
   );
 };
