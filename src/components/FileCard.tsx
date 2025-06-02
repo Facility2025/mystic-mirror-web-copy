@@ -225,7 +225,7 @@ const FileCard = ({
 
   return (
     <>
-      <div className="bg-gradient-to-br from-black to-purple-900 border border-purple-500/50 rounded-lg p-4 hover:border-purple-400 transition-all duration-300 backdrop-blur-md shadow-2xl">
+      <div className="bg-gradient-to-br from-black to-purple-900 border border-purple-500/50 rounded-lg p-4 hover:border-purple-400 transition-all duration-300 backdrop-blur-md shadow-2xl shadow-white/10" style={{ boxShadow: '0 0 0 1px rgba(255, 255, 255, 0.8), 0 0 20px rgba(0, 0, 0, 0.3)' }}>
         <div className="flex justify-between items-center mb-4">
           <span className="bg-green-500 text-black text-xs font-bold px-2 py-1 rounded">
             {id}

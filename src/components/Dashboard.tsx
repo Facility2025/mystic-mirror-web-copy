@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Upload, LogOut, File } from 'lucide-react';
+import { Upload, LogOut, File, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import FileCard from './FileCard';
 import FileUploadForm from './FileUploadForm';
@@ -10,6 +10,12 @@ interface DashboardProps {
 }
 
 const Dashboard = ({ onLogout }: DashboardProps) => {
+  // Simulando dados do usuário - em um app real, isso viria de um contexto de autenticação
+  const currentUser = {
+    email: 'usuario@example.com',
+    role: 'admin' // ou 'usuario'
+  };
+
   const [isUploadFormOpen, setIsUploadFormOpen] = useState(false);
   const [files, setFiles] = useState([
     {
@@ -164,14 +170,26 @@ const Dashboard = ({ onLogout }: DashboardProps) => {
       <header className="bg-gradient-to-br from-black/95 to-gray-900/95 backdrop-blur-md border-b border-purple-500/50 px-6 py-4 relative z-10">
         <div className="flex justify-between items-center">
           <h1 className="text-white text-xl font-bold">Meus Arquivos e Acesso da Web</h1>
-          <Button 
-            onClick={onLogout}
-            variant="destructive" 
-            className="bg-red-500 hover:bg-red-600"
-          >
-            <LogOut className="h-4 w-4 mr-2" />
-            Sair
-          </Button>
+          <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-2 text-white">
+              <User className="h-4 w-4" />
+              <span className="text-sm">
+                <span className="font-semibold text-green-400">
+                  {currentUser.role === 'admin' ? 'Admin' : 'Usuário'}
+                </span>
+                {' - '}
+                <span className="text-gray-300">{currentUser.email}</span>
+              </span>
+            </div>
+            <Button 
+              onClick={onLogout}
+              variant="destructive" 
+              className="bg-red-500 hover:bg-red-600"
+            >
+              <LogOut className="h-4 w-4 mr-2" />
+              Sair
+            </Button>
+          </div>
         </div>
       </header>
 
