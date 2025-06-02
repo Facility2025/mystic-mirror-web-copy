@@ -147,9 +147,54 @@ const Dashboard = ({ onLogout }: DashboardProps) => {
   };
 
   return (
-    <div className="min-h-screen bg-black">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 relative overflow-hidden">
+      {/* Animated Background */}
+      <div className="absolute inset-0 z-0">
+        {/* Floating circles */}
+        <div className="absolute top-10 left-10 w-4 h-4 bg-black/20 rounded-full animate-bounce" style={{ animationDelay: '0s', animationDuration: '3s' }}></div>
+        <div className="absolute top-32 right-20 w-6 h-6 bg-black/15 rounded-full animate-bounce" style={{ animationDelay: '1s', animationDuration: '4s' }}></div>
+        <div className="absolute bottom-20 left-32 w-5 h-5 bg-black/25 rounded-full animate-bounce" style={{ animationDelay: '2s', animationDuration: '3.5s' }}></div>
+        <div className="absolute top-1/2 right-32 w-3 h-3 bg-black/30 rounded-full animate-bounce" style={{ animationDelay: '0.5s', animationDuration: '2.8s' }}></div>
+        <div className="absolute bottom-32 right-16 w-7 h-7 bg-black/10 rounded-full animate-bounce" style={{ animationDelay: '1.5s', animationDuration: '4.2s' }}></div>
+        
+        {/* Animated lines */}
+        <svg className="absolute inset-0 w-full h-full" style={{ zIndex: -1 }}>
+          <defs>
+            <pattern id="grid" width="60" height="60" patternUnits="userSpaceOnUse">
+              <path d="M 60 0 L 0 0 0 60" fill="none" stroke="rgba(0,0,0,0.1)" strokeWidth="1"/>
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#grid)" />
+          
+          {/* Moving diagonal lines */}
+          <g className="animate-pulse" style={{ animationDuration: '6s' }}>
+            <line x1="0" y1="0" x2="100%" y2="100%" stroke="rgba(0,0,0,0.15)" strokeWidth="2" strokeDasharray="10,5">
+              <animateTransform attributeName="transform" type="translate" values="0,0; 20,20; 0,0" dur="8s" repeatCount="indefinite"/>
+            </line>
+            <line x1="100%" y1="0" x2="0" y2="100%" stroke="rgba(0,0,0,0.15)" strokeWidth="2" strokeDasharray="15,10">
+              <animateTransform attributeName="transform" type="translate" values="0,0; -20,20; 0,0" dur="10s" repeatCount="indefinite"/>
+            </line>
+          </g>
+          
+          {/* Floating horizontal lines */}
+          <g className="opacity-60">
+            <line x1="0" y1="25%" x2="100%" y2="25%" stroke="rgba(0,0,0,0.08)" strokeWidth="1" strokeDasharray="5,15">
+              <animateTransform attributeName="transform" type="translate" values="0,0; 30,0; 0,0" dur="12s" repeatCount="indefinite"/>
+            </line>
+            <line x1="0" y1="75%" x2="100%" y2="75%" stroke="rgba(0,0,0,0.08)" strokeWidth="1" strokeDasharray="8,12">
+              <animateTransform attributeName="transform" type="translate" values="0,0; -25,0; 0,0" dur="9s" repeatCount="indefinite"/>
+            </line>
+          </g>
+        </svg>
+        
+        {/* Neuromorphic floating elements */}
+        <div className="absolute top-16 right-1/4 w-20 h-20 bg-gradient-to-br from-white to-slate-100 rounded-full shadow-[inset_-12px_-8px_40px_#46464620] animate-pulse" style={{ animationDuration: '4s' }}></div>
+        <div className="absolute bottom-24 left-1/4 w-16 h-16 bg-gradient-to-br from-white to-slate-100 rounded-full shadow-[inset_-10px_-6px_30px_#46464620] animate-pulse" style={{ animationDuration: '5s' }}></div>
+        <div className="absolute top-1/3 left-1/6 w-12 h-12 bg-gradient-to-br from-white to-slate-100 rounded-full shadow-[inset_-8px_-4px_20px_#46464620] animate-pulse" style={{ animationDuration: '3.5s' }}></div>
+      </div>
+
       {/* Header */}
-      <header className="bg-purple-700 px-6 py-4">
+      <header className="bg-purple-700 px-6 py-4 relative z-10">
         <div className="flex justify-between items-center">
           <h1 className="text-green-400 text-xl font-bold">Meus Arquivos e Acesso da Web</h1>
           <Button 
@@ -164,7 +209,7 @@ const Dashboard = ({ onLogout }: DashboardProps) => {
       </header>
 
       {/* Main Content */}
-      <main className="p-6">
+      <main className="p-6 relative z-10">
         <div className="flex justify-between items-center mb-6">
           <Button 
             onClick={() => setIsUploadFormOpen(true)}
@@ -176,8 +221,8 @@ const Dashboard = ({ onLogout }: DashboardProps) => {
         </div>
 
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-white text-lg font-semibold">Página 1 de 2</h2>
-          <p className="text-gray-400">Exibindo 1-30 de {files.length + 37} arquivos</p>
+          <h2 className="text-gray-800 text-lg font-semibold">Página 1 de 2</h2>
+          <p className="text-gray-600">Exibindo 1-30 de {files.length + 37} arquivos</p>
         </div>
 
         {/* Files Grid */}
