@@ -1,10 +1,10 @@
-
 import React, { useState } from 'react';
 import { Upload, X, Link as LinkIcon, Image } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { AspectRatio } from '@/components/ui/aspect-ratio';
 
 interface FileUploadFormProps {
   isOpen: boolean;
@@ -170,31 +170,36 @@ const FileUploadForm = ({ isOpen, onClose, onSubmit }: FileUploadFormProps) => {
             )}
           </div>
 
-          {/* Área para colar imagem */}
+          {/* Área para colar imagem com preview retangular */}
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-2">
               Colar Imagem
             </label>
             <div
               onPaste={handlePaste}
-              className="w-full min-h-[80px] bg-slate-700 border-2 border-dashed border-slate-600 rounded-lg flex items-center justify-center cursor-pointer hover:border-slate-500 transition-colors"
+              className="w-full bg-slate-700 border-2 border-dashed border-slate-600 rounded-lg cursor-pointer hover:border-slate-500 transition-colors"
               tabIndex={0}
             >
               {pastedImage ? (
-                <div className="text-center">
-                  <Image className="h-6 w-6 text-green-400 mx-auto mb-1" />
-                  <p className="text-green-400 text-sm">Imagem colada: {pastedImage.name || 'imagem.png'}</p>
-                </div>
+                <AspectRatio ratio={16 / 9} className="w-full">
+                  <img 
+                    src={URL.createObjectURL(pastedImage)}
+                    alt="Imagem colada"
+                    className="w-full h-full object-cover rounded"
+                  />
+                </AspectRatio>
               ) : (
-                <div className="text-center">
-                  <Image className="h-6 w-6 text-gray-400 mx-auto mb-1" />
-                  <p className="text-gray-400 text-sm">Ctrl+V para colar imagem</p>
+                <div className="min-h-[80px] flex items-center justify-center">
+                  <div className="text-center">
+                    <Image className="h-6 w-6 text-gray-400 mx-auto mb-1" />
+                    <p className="text-gray-400 text-sm">Ctrl+V para colar imagem</p>
+                  </div>
                 </div>
               )}
             </div>
           </div>
 
-          {/* Seleção de arquivo */}
+          {/* Seleção de arquivo com botão vermelho */}
           <div>
             <label htmlFor="file" className="block text-sm font-medium text-gray-300 mb-2">
               Selecionar Arquivo
@@ -210,8 +215,7 @@ const FileUploadForm = ({ isOpen, onClose, onSubmit }: FileUploadFormProps) => {
               <Button
                 type="button"
                 onClick={() => document.getElementById('file')?.click()}
-                variant="outline"
-                className="w-full text-white hover:bg-slate-700 border-slate-600"
+                className="w-full bg-red-500 hover:bg-red-600 text-white border-red-500"
               >
                 <Upload className="h-4 w-4 mr-2" />
                 Escolher Arquivo do Desktop
