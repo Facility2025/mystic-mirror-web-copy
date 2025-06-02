@@ -5,7 +5,6 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
-
 interface FileUploadFormProps {
   isOpen: boolean;
   onClose: () => void;
@@ -18,7 +17,6 @@ interface FileUploadFormProps {
     isLink?: boolean;
   }) => void;
 }
-
 const FileUploadForm = ({
   isOpen,
   onClose,
@@ -30,14 +28,12 @@ const FileUploadForm = ({
   const [linkUrl, setLinkUrl] = useState('');
   const [pastedImage, setPastedImage] = useState<File | null>(null);
   const [cancelButtonClicked, setCancelButtonClicked] = useState(false);
-
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0] || null;
     setSelectedFile(file);
     setLinkUrl(''); // Limpa o link se arquivo for selecionado
     setPastedImage(null); // Limpa imagem colada
   };
-
   const handlePaste = (event: React.ClipboardEvent) => {
     const items = event.clipboardData?.items;
     if (items) {
@@ -54,7 +50,6 @@ const FileUploadForm = ({
       }
     }
   };
-
   const handleLinkChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setLinkUrl(event.target.value);
     if (event.target.value) {
@@ -62,7 +57,6 @@ const FileUploadForm = ({
       setPastedImage(null); // Limpa imagem colada
     }
   };
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (name && (selectedFile || pastedImage || linkUrl)) {
@@ -70,7 +64,6 @@ const FileUploadForm = ({
       let fileType = '';
       let file = null;
       let isLink = false;
-
       if (linkUrl) {
         fileUrl = linkUrl;
         fileType = 'link';
@@ -84,7 +77,6 @@ const FileUploadForm = ({
         fileType = selectedFile.type;
         file = selectedFile;
       }
-
       onSubmit({
         name,
         description,
@@ -104,7 +96,6 @@ const FileUploadForm = ({
       onClose();
     }
   };
-
   const handleClose = () => {
     setCancelButtonClicked(true);
     setTimeout(() => {
@@ -117,7 +108,6 @@ const FileUploadForm = ({
       onClose();
     }, 200);
   };
-
   const hasValidInput = name && (selectedFile || pastedImage || linkUrl);
 
   // Função para verificar se é uma imagem
@@ -129,31 +119,19 @@ const FileUploadForm = ({
   const renderPasteAreaContent = () => {
     // Prioridade: 1. Imagem colada, 2. Arquivo selecionado (se for imagem), 3. Placeholder
     const imageToShow = pastedImage || (selectedFile && isImage(selectedFile) ? selectedFile : null);
-    
     if (imageToShow) {
-      return (
-        <AspectRatio ratio={16 / 9} className="w-full">
-          <img 
-            src={URL.createObjectURL(imageToShow)} 
-            alt="Imagem selecionada" 
-            className="w-full h-full object-cover rounded" 
-          />
-        </AspectRatio>
-      );
+      return <AspectRatio ratio={16 / 9} className="w-full">
+          <img src={URL.createObjectURL(imageToShow)} alt="Imagem selecionada" className="w-full h-full object-cover rounded" />
+        </AspectRatio>;
     }
-    
-    return (
-      <div className="min-h-[80px] flex items-center justify-center">
+    return <div className="min-h-[80px] flex items-center justify-center">
         <div className="text-center">
           <Image className="h-6 w-6 text-gray-400 mx-auto mb-1" />
           <p className="text-gray-400 text-sm">Ctrl+V para colar imagem</p>
         </div>
-      </div>
-    );
+      </div>;
   };
-
-  return (
-    <Dialog open={isOpen} onOpenChange={handleClose}>
+  return <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="bg-slate-800 border-slate-700 text-white max-w-md">
         <DialogHeader>
           <DialogTitle className="text-green-400">Enviar Arquivo</DialogTitle>
@@ -164,15 +142,7 @@ const FileUploadForm = ({
             <label htmlFor="name" className="block text-sm font-medium text-gray-300 mb-2">
               Nome do Arquivo
             </label>
-            <Input 
-              id="name" 
-              type="text" 
-              value={name} 
-              onChange={e => setName(e.target.value)} 
-              className={`bg-slate-700 text-white ${!name ? 'border-red-500' : 'border-slate-600'}`} 
-              placeholder="Digite o nome do arquivo" 
-              required 
-            />
+            <Input id="name" type="text" value={name} onChange={e => setName(e.target.value)} className={`bg-slate-700 text-white ${!name ? 'border-red-500' : 'border-slate-600'}`} placeholder="Digite o nome do arquivo" required />
             {!name && <p className="text-xs mt-1 text-slate-50">Campo obrigatório</p>}
           </div>
 
@@ -180,14 +150,7 @@ const FileUploadForm = ({
             <label htmlFor="description" className="block text-sm font-medium text-gray-300 mb-2">
               Descrição
             </label>
-            <Textarea 
-              id="description" 
-              value={description} 
-              onChange={e => setDescription(e.target.value)} 
-              className="bg-slate-700 border-slate-600 text-white resize-none" 
-              placeholder="Digite uma descrição (opcional)" 
-              rows={3} 
-            />
+            <Textarea id="description" value={description} onChange={e => setDescription(e.target.value)} className="bg-slate-700 border-slate-600 text-white resize-none" placeholder="Digite uma descrição (opcional)" rows={3} />
           </div>
 
           {/* Campo para Link */}
@@ -195,20 +158,11 @@ const FileUploadForm = ({
             <label htmlFor="link" className="block text-sm font-medium text-gray-300 mb-2">
               Link do Arquivo
             </label>
-            <Input 
-              id="link" 
-              type="url" 
-              value={linkUrl} 
-              onChange={handleLinkChange} 
-              className="bg-slate-700 border-slate-600 text-white" 
-              placeholder="Cole o link do arquivo (opcional)" 
-            />
-            {linkUrl && (
-              <p className="text-green-400 text-xs mt-1">
+            <Input id="link" type="url" value={linkUrl} onChange={handleLinkChange} className="bg-slate-700 border-slate-600 text-white" placeholder="Cole o link do arquivo (opcional)" />
+            {linkUrl && <p className="text-green-400 text-xs mt-1">
                 <LinkIcon className="h-3 w-3 inline mr-1" />
                 Link adicionado
-              </p>
-            )}
+              </p>}
           </div>
 
           {/* Área para colar imagem com preview retangular */}
@@ -216,11 +170,7 @@ const FileUploadForm = ({
             <label className="block text-sm font-medium text-gray-300 mb-2">
               Colar Imagem
             </label>
-            <div 
-              onPaste={handlePaste} 
-              className="w-full bg-slate-700 border-2 border-dashed border-slate-600 rounded-lg cursor-pointer hover:border-slate-500 transition-colors" 
-              tabIndex={0}
-            >
+            <div onPaste={handlePaste} className="w-full bg-slate-700 border-2 border-dashed border-slate-600 rounded-lg cursor-pointer hover:border-slate-500 transition-colors" tabIndex={0}>
               {renderPasteAreaContent()}
             </div>
           </div>
@@ -229,64 +179,29 @@ const FileUploadForm = ({
           <div>
             <label htmlFor="file" className="block text-sm font-medium text-gray-300 mb-2">Selecione um arquivo, cole uma imagem ou insira um link</label>
             <div className="space-y-3">
-              <input 
-                id="file" 
-                type="file" 
-                onChange={handleFileSelect} 
-                className="hidden" 
-                accept="*/*" 
-              />
-              <Button 
-                type="button" 
-                onClick={() => document.getElementById('file')?.click()} 
-                className="w-full bg-red-500 hover:bg-red-600 text-white border-red-500"
-              >
+              <input id="file" type="file" onChange={handleFileSelect} className="hidden" accept="*/*" />
+              <Button type="button" onClick={() => document.getElementById('file')?.click()} className="w-full bg-red-500 hover:bg-red-600 text-white border-red-500">
                 <Upload className="h-4 w-4 mr-2" />
                 Escolher Arquivo do Desktop
               </Button>
-              {selectedFile && (
-                <p className="text-green-400 text-sm">
+              {selectedFile && <p className="text-green-400 text-sm">
                   Arquivo selecionado: {selectedFile.name}
-                </p>
-              )}
+                </p>}
             </div>
           </div>
 
-          {!hasValidInput && (
-            <p className="text-xs text-slate-50">
-              Selecione um arquivo, cole uma imagem ou insira um link
-            </p>
-          )}
+          {!hasValidInput && <p className="text-xs text-slate-50">Selecione um arquivo</p>}
 
           <div className="flex space-x-3 pt-4">
-            <Button 
-              type="button" 
-              onClick={handleClose} 
-              variant="outline" 
-              className={`flex-1 border-slate-600 text-white transition-colors ${
-                cancelButtonClicked 
-                  ? 'bg-red-500 hover:bg-red-600 border-red-500' 
-                  : 'bg-green-500 hover:bg-green-600 border-green-500'
-              }`}
-            >
+            <Button type="button" onClick={handleClose} variant="outline" className={`flex-1 border-slate-600 text-white transition-colors ${cancelButtonClicked ? 'bg-red-500 hover:bg-red-600 border-red-500' : 'bg-green-500 hover:bg-green-600 border-green-500'}`}>
               Cancelar
             </Button>
-            <Button 
-              type="submit" 
-              disabled={!hasValidInput} 
-              className={`flex-1 font-semibold ${
-                !hasValidInput 
-                  ? 'bg-red-500 hover:bg-red-600 text-white' 
-                  : 'bg-green-500 hover:bg-green-600 text-black'
-              }`}
-            >
+            <Button type="submit" disabled={!hasValidInput} className={`flex-1 font-semibold ${!hasValidInput ? 'bg-red-500 hover:bg-red-600 text-white' : 'bg-green-500 hover:bg-green-600 text-black'}`}>
               Enviar Arquivo
             </Button>
           </div>
         </form>
       </DialogContent>
-    </Dialog>
-  );
+    </Dialog>;
 };
-
 export default FileUploadForm;
