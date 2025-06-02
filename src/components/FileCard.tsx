@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Download, Edit, File } from 'lucide-react';
+import { Download, Edit, File, FileText, Image as ImageIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
 
@@ -52,7 +52,22 @@ const FileCard = ({ id, name, description, date, type, icon, fileUrl, fileType, 
            (isLink && fileUrl && (fileUrl.includes('.jpg') || fileUrl.includes('.jpeg') || fileUrl.includes('.png') || fileUrl.includes('.gif')));
   };
 
+  const isPDF = () => {
+    if (!fileType) return false;
+    return fileType === 'application/pdf' || 
+           (isLink && fileUrl && fileUrl.includes('.pdf'));
+  };
+
+  const isTextDocument = () => {
+    if (!fileType) return false;
+    return fileType.startsWith('text/') || 
+           fileType.includes('document') ||
+           fileType.includes('word') ||
+           (isLink && fileUrl && (fileUrl.includes('.txt') || fileUrl.includes('.doc') || fileUrl.includes('.docx')));
+  };
+
   const renderFilePreview = () => {
+    // Imagens
     if (isImage() && fileUrl && !imageError) {
       return (
         <AspectRatio ratio={16 / 9} className="w-full">
@@ -66,10 +81,38 @@ const FileCard = ({ id, name, description, date, type, icon, fileUrl, fileType, 
       );
     }
 
+    // PDFs
+    if (isPDF()) {
+      return (
+        <AspectRatio ratio={16 / 9} className="w-full">
+          <div className="w-full h-full bg-red-100 rounded flex flex-col items-center justify-center">
+            <FileText className="h-12 w-12 text-red-600 mb-2" />
+            <span className="text-sm font-medium text-red-700">PDF</span>
+          </div>
+        </AspectRatio>
+      );
+    }
+
+    // Documentos de texto
+    if (isTextDocument()) {
+      return (
+        <AspectRatio ratio={16 / 9} className="w-full">
+          <div className="w-full h-full bg-blue-100 rounded flex flex-col items-center justify-center">
+            <FileText className="h-12 w-12 text-blue-600 mb-2" />
+            <span className="text-sm font-medium text-blue-700">DOC</span>
+          </div>
+        </AspectRatio>
+      );
+    }
+
+    // Arquivo padrão
     return (
-      <div className="text-center flex items-center justify-center h-full">
-        <File className="h-16 w-16 text-gray-400" />
-      </div>
+      <AspectRatio ratio={16 / 9} className="w-full">
+        <div className="w-full h-full bg-gray-100 rounded flex flex-col items-center justify-center">
+          <File className="h-12 w-12 text-gray-600 mb-2" />
+          <span className="text-sm font-medium text-gray-700">FILE</span>
+        </div>
+      </AspectRatio>
     );
   };
 

@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Upload, LogOut, File } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -78,50 +79,42 @@ const Dashboard = ({ onLogout }: DashboardProps) => {
     }
   ]);
 
-  const getFileTypeFromExtension = (fileName: string) => {
-    const extension = fileName.split('.').pop()?.toLowerCase();
-    switch (extension) {
-      case 'mp4':
-      case 'avi':
-      case 'mov':
-      case 'mkv':
-        return { type: 'VIDEO' as const, icon: <File className="h-8 w-8 text-gray-400" /> };
-      case 'txt':
-      case 'doc':
-      case 'docx':
-        return { type: 'TEXT' as const, icon: <File className="h-8 w-8 text-gray-400" /> };
-      case 'pdf':
-      case 'jpg':
-      case 'jpeg':
-      case 'png':
-      case 'gif':
-        return { type: 'PDF' as const, icon: <File className="h-8 w-8 text-gray-400" /> };
-      default:
-        return { type: 'AI' as const, icon: <File className="h-8 w-8 text-gray-400" /> };
-    }
-  };
-
-  const handleFileUpload = (fileData: { name: string; description: string; file: File | null; fileUrl: string; fileType: string; isLink?: boolean }) => {
-    let type;
-    
+  const getFileTypeFromData = (fileData: { name: string; file: File | null; fileUrl: string; fileType: string; isLink?: boolean }) => {
     if (fileData.isLink) {
       // Para links, tentamos determinar o tipo pela URL
       const url = fileData.fileUrl.toLowerCase();
       if (url.includes('.mp4') || url.includes('.avi') || url.includes('.mov') || url.includes('youtube.com') || url.includes('vimeo.com')) {
-        type = 'VIDEO' as const;
+        return 'VIDEO' as const;
       } else if (url.includes('.pdf')) {
-        type = 'PDF' as const;
+        return 'PDF' as const;
       } else if (url.includes('.jpg') || url.includes('.jpeg') || url.includes('.png') || url.includes('.gif')) {
-        type = 'PDF' as const; // Usando PDF para imagens como no código original
+        return 'PDF' as const; // Usando PDF para imagens para manter compatibilidade
+      } else if (url.includes('.txt') || url.includes('.doc') || url.includes('.docx')) {
+        return 'TEXT' as const;
       } else {
-        type = 'AI' as const;
+        return 'AI' as const;
       }
     } else if (fileData.file) {
-      const result = getFileTypeFromExtension(fileData.file.name);
-      type = result.type;
+      // Para arquivos, usamos o tipo MIME
+      const mimeType = fileData.fileType;
+      if (mimeType.startsWith('image/')) {
+        return 'PDF' as const; // Usando PDF para imagens para manter compatibilidade
+      } else if (mimeType === 'application/pdf') {
+        return 'PDF' as const;
+      } else if (mimeType.startsWith('text/') || mimeType.includes('document') || mimeType.includes('word')) {
+        return 'TEXT' as const;
+      } else if (mimeType.startsWith('video/')) {
+        return 'VIDEO' as const;
+      } else {
+        return 'AI' as const;
+      }
     } else {
-      type = 'AI' as const;
+      return 'AI' as const;
     }
+  };
+
+  const handleFileUpload = (fileData: { name: string; description: string; file: File | null; fileUrl: string; fileType: string; isLink?: boolean }) => {
+    const type = getFileTypeFromData(fileData);
 
     // Gerar novo ID baseado no próximo número disponível
     const nextNumber = files.length + 1;
