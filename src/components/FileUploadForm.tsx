@@ -143,7 +143,7 @@ const FileUploadForm = ({
               Nome do Arquivo
             </label>
             <Input id="name" type="text" value={name} onChange={e => setName(e.target.value)} className={`bg-slate-700 text-white ${!name ? 'border-red-500' : 'border-slate-600'}`} placeholder="Digite o nome do arquivo" required />
-            {!name && <p className="text-red-500 text-xs mt-1">Campo obrigatório</p>}
+            {!name && <p className="text-xs mt-1 text-slate-50">Campo obrigatório</p>}
           </div>
 
           <div>
