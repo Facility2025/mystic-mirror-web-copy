@@ -170,7 +170,7 @@ const Dashboard = ({ onLogout }: DashboardProps) => {
         <div className="flex justify-between items-center mb-6">
           <Button 
             onClick={() => setIsUploadFormOpen(true)}
-            className="bg-green-500 hover:bg-green-600 text-black font-semibold transform hover:scale-105 hover:translate-y-[-2px] transition-all duration-300"
+            className="bg-black hover:bg-gray-900 text-white font-semibold transform hover:scale-105 hover:translate-y-[-2px] transition-all duration-300"
           >
             <Upload className="h-4 w-4 mr-2" />
             Enviar Arquivos

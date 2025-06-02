@@ -180,7 +180,7 @@ const FileUploadForm = ({
             <label htmlFor="file" className="block text-sm font-medium text-gray-300 mb-2">Selecione um arquivo, cole uma imagem ou insira um link</label>
             <div className="space-y-3">
               <input id="file" type="file" onChange={handleFileSelect} className="hidden" accept="*/*" />
-              <Button type="button" onClick={() => document.getElementById('file')?.click()} className="w-full bg-red-500 hover:bg-red-600 text-white border-red-500">
+              <Button type="button" onClick={() => document.getElementById('file')?.click()} className="w-full bg-black hover:bg-gray-900 text-white border-gray-700">
                 <Upload className="h-4 w-4 mr-2" />
                 Escolher Arquivo do Desktop
               </Button>
@@ -193,10 +193,10 @@ const FileUploadForm = ({
           {!hasValidInput && <p className="text-xs text-slate-50">Selecione um arquivo</p>}
 
           <div className="flex space-x-3 pt-4">
-            <Button type="button" onClick={handleClose} variant="outline" className={`flex-1 border-slate-600 text-white transition-colors ${cancelButtonClicked ? 'bg-red-500 hover:bg-red-600 border-red-500' : 'bg-green-500 hover:bg-green-600 border-green-500'}`}>
+            <Button type="button" onClick={handleClose} variant="outline" className={`flex-1 border-gray-700 text-white transition-colors ${cancelButtonClicked ? 'bg-red-500 hover:bg-red-600 border-red-500' : 'bg-black hover:bg-gray-900 border-gray-700'}`}>
               Cancelar
             </Button>
-            <Button type="submit" disabled={!hasValidInput} className={`flex-1 font-semibold ${!hasValidInput ? 'bg-red-500 hover:bg-red-600 text-white' : 'bg-green-500 hover:bg-green-600 text-black'}`}>
+            <Button type="submit" disabled={!hasValidInput} className={`flex-1 font-semibold ${!hasValidInput ? 'bg-red-500 hover:bg-red-600 text-white' : 'bg-black hover:bg-gray-900 text-white'}`}>
               Enviar Arquivo
             </Button>
           </div>

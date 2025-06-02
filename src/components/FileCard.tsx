@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Download, Edit, File, FileText, Image as ImageIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -187,10 +188,10 @@ const FileCard = ({ id, name, description, date, type, icon, fileUrl, fileType, 
         <div className="flex-1 relative">
           <Button 
             onClick={handleVisualize}
-            className={`flex-1 text-black text-sm w-full transition-all duration-300 ${
+            className={`flex-1 text-white text-sm w-full transition-all duration-300 ${
               isClicked 
                 ? 'bg-red-500 hover:bg-red-600 transform translate-x-2 translate-y-2' 
-                : 'bg-green-500 hover:bg-green-600'
+                : 'bg-black hover:bg-gray-900'
             }`}
             disabled={!fileUrl}
           >
@@ -200,16 +201,16 @@ const FileCard = ({ id, name, description, date, type, icon, fileUrl, fileType, 
         <Button 
           variant="outline" 
           size="sm" 
-          className="bg-black text-green-500 hover:bg-gray-900 border-green-500 hover:border-green-400"
+          className="bg-black text-white hover:bg-gray-900 border-gray-700 hover:border-gray-600"
         >
-          <Download className="h-4 w-4 text-green-500" />
+          <Download className="h-4 w-4 text-white" />
         </Button>
         <Button 
           variant="outline" 
           size="sm" 
-          className="bg-black text-green-500 hover:bg-gray-900 border-green-500 hover:border-green-400"
+          className="bg-black text-white hover:bg-gray-900 border-gray-700 hover:border-gray-600"
         >
-          <Edit className="h-4 w-4 text-green-500" />
+          <Edit className="h-4 w-4 text-white" />
         </Button>
       </div>
     </div>
