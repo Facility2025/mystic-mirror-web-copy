@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Download, Edit, File, FileText, Image as ImageIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -164,7 +163,7 @@ const FileCard = ({ id, name, description, date, type, icon, fileUrl, fileType, 
   };
 
   return (
-    <div className="bg-gradient-to-br from-black/95 to-gray-900/95 border border-purple-500/50 rounded-lg p-4 hover:border-purple-400 transition-all duration-300 backdrop-blur-md shadow-2xl">
+    <div className="bg-gradient-to-br from-black to-purple-900 border border-purple-500/50 rounded-lg p-4 hover:border-purple-400 transition-all duration-300 backdrop-blur-md shadow-2xl">
       <div className="flex justify-between items-center mb-4">
         <span className="bg-green-500 text-black text-xs font-bold px-2 py-1 rounded">
           {id}
@@ -201,16 +200,16 @@ const FileCard = ({ id, name, description, date, type, icon, fileUrl, fileType, 
         <Button 
           variant="outline" 
           size="sm" 
-          className="bg-gradient-to-r from-black/90 to-blue-300/30 text-white hover:from-black hover:to-blue-400/40 border-slate-600"
+          className="bg-black text-green-500 hover:bg-gray-900 border-green-500 hover:border-green-400"
         >
-          <Download className="h-4 w-4" />
+          <Download className="h-4 w-4 text-green-500" />
         </Button>
         <Button 
           variant="outline" 
           size="sm" 
-          className="bg-gradient-to-r from-black/90 to-blue-300/30 text-white hover:from-black hover:to-blue-400/40 border-slate-600"
+          className="bg-black text-green-500 hover:bg-gray-900 border-green-500 hover:border-green-400"
         >
-          <Edit className="h-4 w-4" />
+          <Edit className="h-4 w-4 text-green-500" />
         </Button>
       </div>
     </div>
