@@ -1,4 +1,5 @@
-import React from 'react';
+
+import React, { useState } from 'react';
 import { Download, Edit, Eye } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -14,6 +15,8 @@ interface FileCardProps {
 }
 
 const FileCard = ({ id, name, description, date, type, icon, fileUrl, fileType }: FileCardProps) => {
+  const [imageError, setImageError] = useState(false);
+
   const getTypeColor = (type: string) => {
     switch (type) {
       case 'VIDEO':
@@ -40,12 +43,13 @@ const FileCard = ({ id, name, description, date, type, icon, fileUrl, fileType }
       );
     }
 
-    if (fileType?.startsWith('image/')) {
+    if (fileType?.startsWith('image/') && !imageError) {
       return (
         <img 
           src={fileUrl} 
           alt={name}
           className="w-full h-full object-contain rounded"
+          onError={() => setImageError(true)}
         />
       );
     }
