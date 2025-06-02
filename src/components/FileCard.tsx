@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Download, Edit, Eye } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -35,7 +34,7 @@ const FileCard = ({ id, name, description, date, type, icon, fileUrl, fileType }
   const renderFilePreview = () => {
     if (!fileUrl) {
       return (
-        <div className="text-center">
+        <div className="text-center flex items-center justify-center h-full">
           {icon}
         </div>
       );
@@ -46,7 +45,7 @@ const FileCard = ({ id, name, description, date, type, icon, fileUrl, fileType }
         <img 
           src={fileUrl} 
           alt={name}
-          className="w-full h-full object-cover rounded"
+          className="w-full h-full object-contain rounded"
         />
       );
     }
@@ -55,8 +54,9 @@ const FileCard = ({ id, name, description, date, type, icon, fileUrl, fileType }
       return (
         <video 
           src={fileUrl}
-          className="w-full h-full object-cover rounded"
+          className="w-full h-full object-contain rounded"
           controls
+          preload="metadata"
         />
       );
     }
@@ -65,14 +65,14 @@ const FileCard = ({ id, name, description, date, type, icon, fileUrl, fileType }
       return (
         <iframe
           src={fileUrl}
-          className="w-full h-full rounded"
+          className="w-full h-full rounded border-0"
           title={name}
         />
       );
     }
 
     return (
-      <div className="text-center">
+      <div className="text-center flex items-center justify-center h-full">
         {icon}
       </div>
     );
@@ -94,7 +94,7 @@ const FileCard = ({ id, name, description, date, type, icon, fileUrl, fileType }
         </div>
       </div>
 
-      <div className="flex-1 min-h-[120px] flex items-center justify-center mb-4 bg-slate-700 rounded">
+      <div className="flex-1 min-h-[120px] flex items-center justify-center mb-4 bg-slate-700 rounded overflow-hidden">
         {renderFilePreview()}
       </div>
 
