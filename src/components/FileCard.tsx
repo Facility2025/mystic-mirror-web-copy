@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Download, Edit, File, FileText, Image as ImageIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -42,7 +41,13 @@ const FileCard = ({ id, name, description, date, type, icon, fileUrl, fileType, 
     setTimeout(() => setIsClicked(false), 300);
     
     if (fileUrl) {
-      window.open(fileUrl, '_blank');
+      // Se for um link, abre em nova aba
+      if (isLink) {
+        window.open(fileUrl, '_blank');
+      } else {
+        // Se for arquivo local, também abre em nova aba
+        window.open(fileUrl, '_blank');
+      }
     }
   };
 
@@ -52,12 +57,15 @@ const FileCard = ({ id, name, description, date, type, icon, fileUrl, fileType, 
     // Verifica por tipo MIME
     if (fileType && fileType.startsWith('image/')) return true;
     
-    // Verifica por extensão na URL
+    // Verifica por extensão na URL ou se é um link de imagem conhecido
     if (fileUrl) {
       const url = fileUrl.toLowerCase();
       return url.includes('.jpg') || url.includes('.jpeg') || url.includes('.png') || 
              url.includes('.gif') || url.includes('.webp') || url.includes('.svg') || 
-             url.includes('.bmp') || url.includes('.ico');
+             url.includes('.bmp') || url.includes('.ico') ||
+             url.includes('unsplash.com') || url.includes('imgur.com') ||
+             url.includes('images.') || url.includes('/image/') ||
+             url.includes('cdn.') || url.includes('static.');
     }
     
     return false;

@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
+
 interface FileUploadFormProps {
   isOpen: boolean;
   onClose: () => void;
@@ -17,6 +18,7 @@ interface FileUploadFormProps {
     isLink?: boolean;
   }) => void;
 }
+
 const FileUploadForm = ({
   isOpen,
   onClose,
@@ -28,12 +30,27 @@ const FileUploadForm = ({
   const [linkUrl, setLinkUrl] = useState('');
   const [pastedImage, setPastedImage] = useState<File | null>(null);
   const [cancelButtonClicked, setCancelButtonClicked] = useState(false);
+
+  // Função para verificar se o link é de uma imagem
+  const isImageUrl = (url: string) => {
+    const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg', '.bmp', '.ico'];
+    const lowerUrl = url.toLowerCase();
+    return imageExtensions.some(ext => lowerUrl.includes(ext)) || 
+           lowerUrl.includes('unsplash.com') || 
+           lowerUrl.includes('imgur.com') ||
+           lowerUrl.includes('images.') ||
+           lowerUrl.includes('/image/') ||
+           lowerUrl.includes('cdn.') ||
+           lowerUrl.includes('static.');
+  };
+
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0] || null;
     setSelectedFile(file);
     setLinkUrl(''); // Limpa o link se arquivo for selecionado
     setPastedImage(null); // Limpa imagem colada
   };
+
   const handlePaste = (event: React.ClipboardEvent) => {
     const items = event.clipboardData?.items;
     if (items) {
@@ -50,13 +67,21 @@ const FileUploadForm = ({
       }
     }
   };
+
   const handleLinkChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setLinkUrl(event.target.value);
-    if (event.target.value) {
+    const url = event.target.value;
+    setLinkUrl(url);
+    if (url) {
       setSelectedFile(null); // Limpa arquivo se link for inserido
       setPastedImage(null); // Limpa imagem colada
+      
+      // Se for um link de imagem e não tiver descrição, adiciona automaticamente
+      if (isImageUrl(url) && !description) {
+        setDescription('Imagem');
+      }
     }
   };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (name && (selectedFile || pastedImage || linkUrl)) {
@@ -64,9 +89,11 @@ const FileUploadForm = ({
       let fileType = '';
       let file = null;
       let isLink = false;
+
       if (linkUrl) {
         fileUrl = linkUrl;
-        fileType = 'link';
+        // Se for um link de imagem, define como image/jpeg para aparecer como imagem
+        fileType = isImageUrl(linkUrl) ? 'image/jpeg' : 'link';
         isLink = true;
       } else if (pastedImage) {
         fileUrl = URL.createObjectURL(pastedImage);
@@ -77,6 +104,7 @@ const FileUploadForm = ({
         fileType = selectedFile.type;
         file = selectedFile;
       }
+
       onSubmit({
         name,
         description,
@@ -96,6 +124,7 @@ const FileUploadForm = ({
       onClose();
     }
   };
+
   const handleClose = () => {
     setCancelButtonClicked(true);
     setTimeout(() => {
@@ -108,6 +137,7 @@ const FileUploadForm = ({
       onClose();
     }, 200);
   };
+
   const hasValidInput = name && (selectedFile || pastedImage || linkUrl);
 
   // Função para verificar se é uma imagem
@@ -117,13 +147,24 @@ const FileUploadForm = ({
 
   // Função para renderizar a imagem na área de colar com formato retangular
   const renderPasteAreaContent = () => {
-    // Prioridade: 1. Imagem colada, 2. Arquivo selecionado (se for imagem), 3. Placeholder
+    // Prioridade: 1. Imagem colada, 2. Arquivo selecionado (se for imagem), 3. Link de imagem, 4. Placeholder
     const imageToShow = pastedImage || (selectedFile && isImage(selectedFile) ? selectedFile : null);
+    
     if (imageToShow) {
       return <AspectRatio ratio={16 / 9} className="w-full">
           <img src={URL.createObjectURL(imageToShow)} alt="Imagem selecionada" className="w-full h-full object-cover rounded" />
         </AspectRatio>;
     }
+    
+    // Se há um link de imagem, mostra a imagem do link
+    if (linkUrl && isImageUrl(linkUrl)) {
+      return <AspectRatio ratio={16 / 9} className="w-full">
+          <img src={linkUrl} alt="Imagem do link" className="w-full h-full object-cover rounded" onError={(e) => {
+            console.log('Erro ao carregar imagem do link');
+          }} />
+        </AspectRatio>;
+    }
+    
     return <div className="min-h-[80px] flex items-center justify-center">
         <div className="text-center">
           <Image className="h-6 w-6 text-gray-400 mx-auto mb-1" />
@@ -131,6 +172,7 @@ const FileUploadForm = ({
         </div>
       </div>;
   };
+
   return <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="bg-slate-800 border-slate-700 text-white max-w-md">
         <DialogHeader>
@@ -161,7 +203,7 @@ const FileUploadForm = ({
             <Input id="link" type="url" value={linkUrl} onChange={handleLinkChange} className="bg-slate-700 border-slate-600 text-white" placeholder="Cole o link do arquivo (opcional)" />
             {linkUrl && <p className="text-green-400 text-xs mt-1">
                 <LinkIcon className="h-3 w-3 inline mr-1" />
-                Link adicionado
+                {isImageUrl(linkUrl) ? 'Link de imagem adicionado' : 'Link adicionado'}
               </p>}
           </div>
 
@@ -175,7 +217,7 @@ const FileUploadForm = ({
             </div>
           </div>
 
-          {/* Seleção de arquivo com botão vermelho */}
+          {/* Seleção de arquivo com botão preto */}
           <div>
             <label htmlFor="file" className="block text-sm font-medium text-gray-300 mb-2">Selecione um arquivo, cole uma imagem ou insira um link</label>
             <div className="space-y-3">
@@ -204,4 +246,5 @@ const FileUploadForm = ({
       </DialogContent>
     </Dialog>;
 };
+
 export default FileUploadForm;
