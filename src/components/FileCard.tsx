@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Download, Edit, Eye } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -12,9 +13,10 @@ interface FileCardProps {
   icon: React.ReactNode;
   fileUrl?: string;
   fileType?: string;
+  isLink?: boolean;
 }
 
-const FileCard = ({ id, name, description, date, type, icon, fileUrl, fileType }: FileCardProps) => {
+const FileCard = ({ id, name, description, date, type, icon, fileUrl, fileType, isLink }: FileCardProps) => {
   const [imageError, setImageError] = useState(false);
 
   const getTypeColor = (type: string) => {
@@ -34,11 +36,43 @@ const FileCard = ({ id, name, description, date, type, icon, fileUrl, fileType }
     }
   };
 
+  const handleVisualize = () => {
+    if (fileUrl) {
+      window.open(fileUrl, '_blank');
+    }
+  };
+
   const renderFilePreview = () => {
     if (!fileUrl) {
       return (
         <div className="text-center flex items-center justify-center h-full">
           {icon}
+        </div>
+      );
+    }
+
+    // Se for um link, tentamos determinar o tipo pelo URL
+    if (isLink || fileType === 'link') {
+      const url = fileUrl.toLowerCase();
+      if (url.includes('.jpg') || url.includes('.jpeg') || url.includes('.png') || url.includes('.gif') || url.includes('.webp')) {
+        return (
+          <AspectRatio ratio={16 / 9} className="w-full">
+            <img 
+              src={fileUrl} 
+              alt={name}
+              className="w-full h-full object-cover rounded"
+              onError={() => setImageError(true)}
+            />
+          </AspectRatio>
+        );
+      }
+      
+      return (
+        <div className="text-center flex items-center justify-center h-full">
+          {icon}
+          <div className="ml-2">
+            <p className="text-xs text-gray-400">Link</p>
+          </div>
         </div>
       );
     }
@@ -117,7 +151,11 @@ const FileCard = ({ id, name, description, date, type, icon, fileUrl, fileType }
       </div>
 
       <div className="flex space-x-2 mt-4">
-        <Button className="flex-1 bg-green-500 hover:bg-green-600 text-black text-sm">
+        <Button 
+          onClick={handleVisualize}
+          className="flex-1 bg-green-500 hover:bg-green-600 text-black text-sm"
+          disabled={!fileUrl}
+        >
           Visualizar
         </Button>
         <Button variant="outline" size="sm" className="border-slate-600 text-white hover:bg-slate-700">

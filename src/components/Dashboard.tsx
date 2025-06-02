@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Upload, LogOut, FileVideo, FileText, FileImage, Settings, Database } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -101,25 +100,50 @@ const Dashboard = ({ onLogout }: DashboardProps) => {
     }
   };
 
-  const handleFileUpload = (fileData: { name: string; description: string; file: File | null; fileUrl: string; fileType: string }) => {
-    if (fileData.file) {
-      const { type, icon } = getFileTypeFromExtension(fileData.file.name);
-      const newId = String(files.length + 1).padStart(2, '0');
-      const currentDate = new Date().toLocaleDateString('pt-BR');
-      
-      const newFile = {
-        id: newId,
-        name: fileData.name,
-        description: fileData.description,
-        date: currentDate,
-        type: type,
-        icon: icon,
-        fileUrl: fileData.fileUrl,
-        fileType: fileData.fileType
-      };
-
-      setFiles([newFile, ...files]);
+  const handleFileUpload = (fileData: { name: string; description: string; file: File | null; fileUrl: string; fileType: string; isLink?: boolean }) => {
+    let type, icon;
+    
+    if (fileData.isLink) {
+      // Para links, tentamos determinar o tipo pela URL
+      const url = fileData.fileUrl.toLowerCase();
+      if (url.includes('.mp4') || url.includes('.avi') || url.includes('.mov') || url.includes('youtube.com') || url.includes('vimeo.com')) {
+        type = 'VIDEO' as const;
+        icon = <FileVideo className="h-8 w-8 text-red-500" />;
+      } else if (url.includes('.pdf')) {
+        type = 'PDF' as const;
+        icon = <FileImage className="h-8 w-8 text-blue-500" />;
+      } else if (url.includes('.jpg') || url.includes('.jpeg') || url.includes('.png') || url.includes('.gif')) {
+        type = 'PDF' as const; // Usando PDF para imagens como no código original
+        icon = <FileImage className="h-8 w-8 text-blue-500" />;
+      } else {
+        type = 'AI' as const;
+        icon = <Settings className="h-8 w-8 text-purple-500" />;
+      }
+    } else if (fileData.file) {
+      const result = getFileTypeFromExtension(fileData.file.name);
+      type = result.type;
+      icon = result.icon;
+    } else {
+      type = 'AI' as const;
+      icon = <Settings className="h-8 w-8 text-purple-500" />;
     }
+
+    const newId = String(files.length + 1).padStart(2, '0');
+    const currentDate = new Date().toLocaleDateString('pt-BR');
+    
+    const newFile = {
+      id: newId,
+      name: fileData.name,
+      description: fileData.description,
+      date: currentDate,
+      type: type,
+      icon: icon,
+      fileUrl: fileData.fileUrl,
+      fileType: fileData.fileType,
+      isLink: fileData.isLink
+    };
+
+    setFiles([newFile, ...files]);
   };
 
   return (
@@ -169,6 +193,7 @@ const Dashboard = ({ onLogout }: DashboardProps) => {
               icon={file.icon}
               fileUrl={(file as any).fileUrl}
               fileType={(file as any).fileType}
+              isLink={(file as any).isLink}
             />
           ))}
         </div>
