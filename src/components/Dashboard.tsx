@@ -7,6 +7,7 @@ import FileUploadForm from './FileUploadForm';
 import NeuralBackground from './NeuralBackground';
 import PWAInstallPrompt from './PWAInstallPrompt';
 import BudgetModal from './BudgetModal';
+import SalesLoginModal from './SalesLoginModal';
 
 interface UserData {
   email: string;
@@ -95,6 +96,7 @@ const Dashboard = ({ onLogout, userData }: DashboardProps) => {
   ]);
 
   const [isBudgetModalOpen, setIsBudgetModalOpen] = useState(false);
+  const [isSalesLoginOpen, setIsSalesLoginOpen] = useState(false);
 
   const getFileTypeFromData = (fileData: { name: string; file: File | null; fileUrl: string; fileType: string; isLink?: boolean }) => {
     console.log('Processando arquivo:', fileData);
@@ -180,6 +182,14 @@ const Dashboard = ({ onLogout, userData }: DashboardProps) => {
     file.description.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const handleSalesButtonClick = () => {
+    setIsSalesLoginOpen(true);
+  };
+
+  const handleSalesLoginSuccess = () => {
+    setIsBudgetModalOpen(true);
+  };
+
   return (
     <div className="min-h-screen bg-black relative overflow-hidden">
       <NeuralBackground />
@@ -227,7 +237,7 @@ const Dashboard = ({ onLogout, userData }: DashboardProps) => {
             </Button>
             
             <Button 
-              onClick={() => setIsBudgetModalOpen(true)}
+              onClick={handleSalesButtonClick}
               className="bg-orange-accent hover:bg-orange-accent/80 text-black font-semibold transform hover:scale-105 hover:translate-y-[-2px] transition-all duration-300 w-full sm:w-auto border border-orange-accent/30"
             >
               <Calculator className="h-4 w-4 mr-2" />
@@ -293,6 +303,13 @@ const Dashboard = ({ onLogout, userData }: DashboardProps) => {
         isOpen={isUploadFormOpen}
         onClose={() => setIsUploadFormOpen(false)}
         onSubmit={handleFileUpload}
+      />
+
+      {/* Sales Login Modal */}
+      <SalesLoginModal
+        isOpen={isSalesLoginOpen}
+        onClose={() => setIsSalesLoginOpen(false)}
+        onLoginSuccess={handleSalesLoginSuccess}
       />
 
       {/* Budget Modal */}
