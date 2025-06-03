@@ -42,13 +42,13 @@ const FileCard = ({
       case 'VIDEO':
         return 'bg-red-500';
       case 'TEXT':
-        return 'bg-green-500';
+        return 'bg-neon-green';
       case 'PDF':
         return 'bg-blue-500';
       case 'AI':
-        return 'bg-purple-500';
+        return 'bg-orange-accent';
       case 'VPS':
-        return 'bg-orange-500';
+        return 'bg-orange-accent';
       default:
         return 'bg-gray-500';
     }
@@ -189,9 +189,9 @@ const FileCard = ({
     if (isPDF()) {
       return (
         <AspectRatio ratio={16 / 9} className="w-full">
-          <div className="w-full h-full bg-red-100 rounded flex flex-col items-center justify-center">
-            <FileText className="h-12 w-12 text-red-600 mb-2" />
-            <span className="text-sm font-medium text-red-700">PDF</span>
+          <div className="w-full h-full bg-red-900/20 border border-red-500/30 rounded flex flex-col items-center justify-center">
+            <FileText className="h-12 w-12 text-red-400 mb-2" />
+            <span className="text-sm font-medium text-red-300">PDF</span>
           </div>
         </AspectRatio>
       );
@@ -201,9 +201,9 @@ const FileCard = ({
     if (isTextDocument()) {
       return (
         <AspectRatio ratio={16 / 9} className="w-full">
-          <div className="w-full h-full bg-blue-100 rounded flex flex-col items-center justify-center">
-            <FileText className="h-12 w-12 text-blue-600 mb-2" />
-            <span className="text-sm font-medium text-blue-700">DOC</span>
+          <div className="w-full h-full bg-neon-green/10 border border-neon-green/30 rounded flex flex-col items-center justify-center">
+            <FileText className="h-12 w-12 text-neon-green mb-2" />
+            <span className="text-sm font-medium text-neon-green">DOC</span>
           </div>
         </AspectRatio>
       );
@@ -212,12 +212,11 @@ const FileCard = ({
     // Arquivo padrão - agora com mais informações sobre o que foi enviado
     return (
       <AspectRatio ratio={16 / 9} className="w-full">
-        <div className="w-full h-full bg-gray-100 rounded flex flex-col items-center justify-center p-2">
-          <File className="h-12 w-12 text-gray-600 mb-2" />
-          <span className="text-sm font-medium text-gray-700 text-center">
+        <div className="w-full h-full bg-darker-blue border border-neon-green/20 rounded flex flex-col items-center justify-center p-2">
+          <File className="h-12 w-12 text-gray-400 mb-2" />
+          <span className="text-sm font-medium text-gray-300 text-center">
             {fileType ? fileType.split('/')[0].toUpperCase() : 'FILE'}
           </span>
-          {fileUrl}
         </div>
       </AspectRatio>
     );
@@ -225,34 +224,34 @@ const FileCard = ({
 
   return (
     <>
-      <div className="bg-gradient-to-br from-black to-purple-900 border border-purple-500/50 rounded-lg p-4 hover:border-purple-400 transition-all duration-300 backdrop-blur-md shadow-2xl shadow-white/10" style={{ boxShadow: '0 0 0 1px rgba(255, 255, 255, 0.8), 0 0 20px rgba(0, 0, 0, 0.3)' }}>
+      <div className="bg-gradient-to-br from-dark-blue to-darker-blue border border-neon-green/30 rounded-lg p-4 hover:border-neon-green/60 transition-all duration-300 backdrop-blur-md shadow-[0_0_15px_rgba(0,255,127,0.1)] hover:shadow-[0_0_25px_rgba(0,255,127,0.3)]">
         <div className="flex justify-between items-center mb-4">
-          <span className="bg-green-500 text-black text-xs font-bold px-2 py-1 rounded">
+          <span className="bg-neon-green text-black text-xs font-bold px-2 py-1 rounded">
             {id}
           </span>
           <File className="h-6 w-6 text-gray-400" />
         </div>
 
-        <div className="flex-1 mb-4 bg-slate-700 rounded overflow-hidden">
+        <div className="flex-1 mb-4 bg-darker-blue/50 rounded overflow-hidden border border-neon-green/20">
           {renderFilePreview()}
         </div>
 
         <div className="space-y-2">
           <h3 className="text-white font-semibold">{name}</h3>
-          <p className={`text-sm ${description ? 'text-gray-400' : 'text-red-500 border border-red-500 rounded px-2 py-1'}`}>
+          <p className={`text-sm ${description ? 'text-gray-300' : 'text-red-400 border border-red-400/50 rounded px-2 py-1'}`}>
             {description || 'Descrição em branco'}
           </p>
-          <p className="text-gray-500 text-xs">{date}</p>
+          <p className="text-gray-400 text-xs">{date}</p>
         </div>
 
         <div className="flex space-x-2 mt-4">
           <div className="flex-1 relative">
             <Button 
               onClick={handleVisualize}
-              className={`flex-1 text-white text-sm w-full transition-all duration-300 ${
+              className={`flex-1 text-white text-sm w-full transition-all duration-300 border ${
                 isClicked 
-                  ? 'bg-red-500 hover:bg-red-600 transform translate-x-2 translate-y-2' 
-                  : 'bg-black hover:bg-gray-900'
+                  ? 'bg-red-500 hover:bg-red-600 transform translate-x-2 translate-y-2 border-red-400' 
+                  : 'bg-dark-green hover:bg-neon-green hover:text-black border-neon-green/30'
               }`}
               disabled={!fileUrl}
             >
@@ -263,18 +262,18 @@ const FileCard = ({
             variant="outline" 
             size="sm" 
             onClick={handleDownload}
-            className="bg-black text-white hover:bg-gray-900 border-gray-700 hover:border-gray-600"
+            className="bg-dark-blue text-white hover:bg-neon-green hover:text-black border-neon-green/30 hover:border-neon-green transition-all duration-300"
             disabled={!fileUrl && !previewImage}
           >
-            <Download className="h-4 w-4 text-white" />
+            <Download className="h-4 w-4" />
           </Button>
           <Button 
             variant="outline" 
             size="sm" 
             onClick={handleEdit}
-            className="bg-black text-white hover:bg-gray-900 border-gray-700 hover:border-gray-600"
+            className="bg-dark-blue text-white hover:bg-orange-accent hover:text-black border-orange-accent/30 hover:border-orange-accent transition-all duration-300"
           >
-            <Edit className="h-4 w-4 text-white" />
+            <Edit className="h-4 w-4" />
           </Button>
         </div>
       </div>

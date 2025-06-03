@@ -178,11 +178,11 @@ const Dashboard = ({ onLogout, userData }: DashboardProps) => {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-black relative overflow-hidden">
+    <div className="min-h-screen bg-black relative overflow-hidden">
       <NeuralBackground />
 
       {/* Header */}
-      <header className="bg-gradient-to-br from-black/95 to-gray-900/95 backdrop-blur-md border-b border-purple-500/50 px-4 sm:px-6 py-4 relative z-10">
+      <header className="bg-black/95 backdrop-blur-md border-b border-neon-green/30 px-4 sm:px-6 py-4 relative z-10">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
           <div className="flex items-center space-x-2">
             <h1 className="text-white text-lg sm:text-xl font-bold">Sistema de Arquivos</h1>
@@ -191,7 +191,7 @@ const Dashboard = ({ onLogout, userData }: DashboardProps) => {
             <div className="flex items-center space-x-2 text-white text-sm">
               <User className="h-4 w-4" />
               <span>
-                <span className="font-semibold text-green-400">
+                <span className="font-semibold text-neon-green">
                   {currentUser.role === 'admin' ? 'Admin' : 'Usuário'}
                 </span>
                 {' - '}
@@ -213,10 +213,10 @@ const Dashboard = ({ onLogout, userData }: DashboardProps) => {
 
       {/* Main Content */}
       <main className="p-4 sm:p-6 relative z-10">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 border border-white/80 rounded-lg p-4 shadow-[0_0_15px_rgba(255,255,255,0.3)] bg-black/20 backdrop-blur-sm">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 border border-neon-green/50 rounded-lg p-4 shadow-[0_0_20px_rgba(0,255,127,0.3)] bg-dark-blue/50 backdrop-blur-sm">
           <Button 
             onClick={() => setIsUploadFormOpen(true)}
-            className="bg-black hover:bg-gray-900 text-white font-semibold transform hover:scale-105 hover:translate-y-[-2px] transition-all duration-300 w-full sm:w-auto"
+            className="bg-dark-green hover:bg-neon-green hover:text-black text-white font-semibold transform hover:scale-105 hover:translate-y-[-2px] transition-all duration-300 w-full sm:w-auto border border-neon-green/30"
           >
             <Upload className="h-4 w-4 mr-2" />
             Enviar Arquivos
@@ -230,7 +230,7 @@ const Dashboard = ({ onLogout, userData }: DashboardProps) => {
               placeholder="Buscar por nome ou descrição..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 bg-black/50 border-purple-500/50 text-white placeholder-gray-400 focus:border-purple-400"
+              className="pl-10 bg-darker-blue/80 border-neon-green/30 text-white placeholder-gray-400 focus:border-neon-green focus:ring-neon-green"
             />
           </div>
         </div>
@@ -245,7 +245,7 @@ const Dashboard = ({ onLogout, userData }: DashboardProps) => {
           {filteredFiles.map((file, index) => (
             <div 
               key={file.id}
-              className="transform hover:scale-105 hover:translate-y-[-8px] transition-all duration-300 hover:shadow-2xl"
+              className="transform hover:scale-105 hover:translate-y-[-8px] transition-all duration-300 hover:shadow-[0_0_25px_rgba(0,255,127,0.4)]"
               style={{
                 animationDelay: `${index * 0.1}s`
               }}

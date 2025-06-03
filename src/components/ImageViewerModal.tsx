@@ -13,8 +13,8 @@ interface ImageViewerModalProps {
 const ImageViewerModal = ({ isOpen, onClose, imageUrl, imageName }: ImageViewerModalProps) => {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-[95vw] max-h-[95vh] bg-black border-gray-800 p-0">
-        <DialogHeader className="p-4 border-b border-gray-700">
+      <DialogContent className="max-w-[95vw] max-h-[95vh] bg-black border-neon-green/30 p-0">
+        <DialogHeader className="p-4 border-b border-neon-green/20">
           <DialogTitle className="text-white text-center">{imageName}</DialogTitle>
         </DialogHeader>
         <div className="flex items-center justify-center p-4 max-h-[85vh] overflow-auto">

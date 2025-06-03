@@ -1,8 +1,10 @@
+
 #root {
   max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
+  background: #000000;
 }
 
 .logo {
@@ -12,10 +14,10 @@
   transition: filter 300ms;
 }
 .logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+  filter: drop-shadow(0 0 2em #00FF7F);
 }
 .logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+  filter: drop-shadow(0 0 2em #00FF7F);
 }
 
 @keyframes logo-spin {
@@ -35,6 +37,8 @@
 
 .card {
   padding: 2em;
+  background: #101820;
+  border: 1px solid #00FF7F30;
 }
 
 .read-the-docs {
