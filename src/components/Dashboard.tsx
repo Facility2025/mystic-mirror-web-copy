@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Upload, LogOut, File, User, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -209,7 +210,7 @@ const Dashboard = ({ onLogout, userData }: DashboardProps) => {
 
       {/* Main Content */}
       <main className="p-6 relative z-10">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 border border-white/80 rounded-lg p-4 shadow-[0_0_15px_rgba(255,255,255,0.3)] bg-black/20 backdrop-blur-sm">
           <Button 
             onClick={() => setIsUploadFormOpen(true)}
             className="bg-black hover:bg-gray-900 text-white font-semibold transform hover:scale-105 hover:translate-y-[-2px] transition-all duration-300"
