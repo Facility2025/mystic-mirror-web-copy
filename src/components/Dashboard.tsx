@@ -185,11 +185,6 @@ const Dashboard = ({ onLogout, userData }: DashboardProps) => {
       <header className="bg-gradient-to-br from-black/95 to-gray-900/95 backdrop-blur-md border-b border-purple-500/50 px-4 sm:px-6 py-4 relative z-10">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
           <div className="flex items-center space-x-2">
-            <img 
-              src="/lovable-uploads/3aff111f-532c-4981-9574-0b45374b5d87.png" 
-              alt="Sistema de Arquivos" 
-              className="h-8 w-8 rounded-lg"
-            />
             <h1 className="text-white text-lg sm:text-xl font-bold">Sistema de Arquivos</h1>
           </div>
           <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-4 w-full sm:w-auto">
