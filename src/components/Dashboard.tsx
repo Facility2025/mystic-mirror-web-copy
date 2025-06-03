@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Upload, LogOut, File, User } from 'lucide-react';
+import { Upload, LogOut, File, User, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import FileCard from './FileCard';
 import FileUploadForm from './FileUploadForm';
 import NeuralBackground from './NeuralBackground';
@@ -23,6 +24,7 @@ const Dashboard = ({ onLogout, userData }: DashboardProps) => {
   };
 
   const [isUploadFormOpen, setIsUploadFormOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
   const [files, setFiles] = useState([
     {
       id: '01',
@@ -168,6 +170,12 @@ const Dashboard = ({ onLogout, userData }: DashboardProps) => {
     );
   };
 
+  // Filtrar arquivos baseado no termo de busca
+  const filteredFiles = files.filter(file => 
+    file.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    file.description.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-black relative overflow-hidden">
       <NeuralBackground />
@@ -201,7 +209,7 @@ const Dashboard = ({ onLogout, userData }: DashboardProps) => {
 
       {/* Main Content */}
       <main className="p-6 relative z-10">
-        <div className="flex justify-between items-center mb-6">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
           <Button 
             onClick={() => setIsUploadFormOpen(true)}
             className="bg-black hover:bg-gray-900 text-white font-semibold transform hover:scale-105 hover:translate-y-[-2px] transition-all duration-300"
@@ -209,16 +217,28 @@ const Dashboard = ({ onLogout, userData }: DashboardProps) => {
             <Upload className="h-4 w-4 mr-2" />
             Enviar Arquivos
           </Button>
+          
+          {/* Barra de Busca */}
+          <div className="relative w-full sm:w-80">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <Input
+              type="text"
+              placeholder="Buscar por nome ou descrição..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-10 bg-black/50 border-purple-500/50 text-white placeholder-gray-400 focus:border-purple-400"
+            />
+          </div>
         </div>
 
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-white text-lg font-semibold">Página 1 de 2</h2>
-          <p className="text-gray-300">Exibindo 1-30 de {files.length + 37} arquivos</p>
+          <p className="text-gray-300">Exibindo 1-30 de {filteredFiles.length + 37} arquivos</p>
         </div>
 
         {/* Files Grid - Responsivo */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6">
-          {files.map((file, index) => (
+          {filteredFiles.map((file, index) => (
             <div 
               key={file.id}
               className="transform hover:scale-105 hover:translate-y-[-8px] transition-all duration-300 hover:shadow-2xl"
@@ -242,6 +262,13 @@ const Dashboard = ({ onLogout, userData }: DashboardProps) => {
             </div>
           ))}
         </div>
+
+        {/* Mensagem quando nenhum arquivo é encontrado */}
+        {filteredFiles.length === 0 && searchTerm && (
+          <div className="text-center py-12">
+            <p className="text-gray-400 text-lg">Nenhum arquivo encontrado para "{searchTerm}"</p>
+          </div>
+        )}
       </main>
 
       {/* Upload Form Modal */}
