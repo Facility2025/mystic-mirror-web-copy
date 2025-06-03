@@ -8,16 +8,49 @@
     <meta name="description" content="Sistema de Gerenciamento de Arquivos" />
     <meta name="author" content="Sistema de Arquivos" />
 
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#16213e" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Sistema de Arquivos" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    
+    <!-- Favicon e Ícones -->
+    <link rel="icon" href="/lovable-uploads/3aff111f-532c-4981-9574-0b45374b5d87.png" type="image/png">
+    <link rel="apple-touch-icon" href="/lovable-uploads/3aff111f-532c-4981-9574-0b45374b5d87.png" />
+    
+    <!-- Manifest -->
+    <link rel="manifest" href="/manifest.json" />
+
+    <!-- Open Graph -->
     <meta property="og:title" content="Sistema de Arquivos" />
     <meta property="og:description" content="Sistema de Gerenciamento de Arquivos" />
     <meta property="og:type" content="website" />
+    <meta property="og:image" content="/lovable-uploads/3aff111f-532c-4981-9574-0b45374b5d87.png" />
 
+    <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@sistema_arquivos" />
+    <meta name="twitter:image" content="/lovable-uploads/3aff111f-532c-4981-9574-0b45374b5d87.png" />
   </head>
 
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+    
+    <!-- Registrar Service Worker -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js')
+            .then((registration) => {
+              console.log('SW registrado com sucesso: ', registration);
+            })
+            .catch((registrationError) => {
+              console.log('Falha no registro do SW: ', registrationError);
+            });
+        });
+      }
+    </script>
   </body>
 </html>

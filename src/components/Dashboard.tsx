@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Upload, LogOut, File, User, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -6,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import FileCard from './FileCard';
 import FileUploadForm from './FileUploadForm';
 import NeuralBackground from './NeuralBackground';
+import PWAInstallPrompt from './PWAInstallPrompt';
 
 interface UserData {
   email: string;
@@ -182,24 +182,32 @@ const Dashboard = ({ onLogout, userData }: DashboardProps) => {
       <NeuralBackground />
 
       {/* Header */}
-      <header className="bg-gradient-to-br from-black/95 to-gray-900/95 backdrop-blur-md border-b border-purple-500/50 px-6 py-4 relative z-10">
-        <div className="flex justify-between items-center">
-          <h1 className="text-white text-xl font-bold">Meus Arquivos e Acesso da Web</h1>
-          <div className="flex items-center space-x-4">
-            <div className="flex items-center space-x-2 text-white">
+      <header className="bg-gradient-to-br from-black/95 to-gray-900/95 backdrop-blur-md border-b border-purple-500/50 px-4 sm:px-6 py-4 relative z-10">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
+          <div className="flex items-center space-x-2">
+            <img 
+              src="/lovable-uploads/3aff111f-532c-4981-9574-0b45374b5d87.png" 
+              alt="Sistema de Arquivos" 
+              className="h-8 w-8 rounded-lg"
+            />
+            <h1 className="text-white text-lg sm:text-xl font-bold">Sistema de Arquivos</h1>
+          </div>
+          <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-4 w-full sm:w-auto">
+            <div className="flex items-center space-x-2 text-white text-sm">
               <User className="h-4 w-4" />
-              <span className="text-sm">
+              <span>
                 <span className="font-semibold text-green-400">
                   {currentUser.role === 'admin' ? 'Admin' : 'Usuário'}
                 </span>
                 {' - '}
-                <span className="text-gray-300">{currentUser.email}</span>
+                <span className="text-gray-300 break-all">{currentUser.email}</span>
               </span>
             </div>
             <Button 
               onClick={onLogout}
               variant="destructive" 
-              className="bg-red-500 hover:bg-red-600"
+              size="sm"
+              className="bg-red-500 hover:bg-red-600 w-full sm:w-auto"
             >
               <LogOut className="h-4 w-4 mr-2" />
               Sair
@@ -209,11 +217,11 @@ const Dashboard = ({ onLogout, userData }: DashboardProps) => {
       </header>
 
       {/* Main Content */}
-      <main className="p-6 relative z-10">
+      <main className="p-4 sm:p-6 relative z-10">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 border border-white/80 rounded-lg p-4 shadow-[0_0_15px_rgba(255,255,255,0.3)] bg-black/20 backdrop-blur-sm">
           <Button 
             onClick={() => setIsUploadFormOpen(true)}
-            className="bg-black hover:bg-gray-900 text-white font-semibold transform hover:scale-105 hover:translate-y-[-2px] transition-all duration-300"
+            className="bg-black hover:bg-gray-900 text-white font-semibold transform hover:scale-105 hover:translate-y-[-2px] transition-all duration-300 w-full sm:w-auto"
           >
             <Upload className="h-4 w-4 mr-2" />
             Enviar Arquivos
@@ -232,9 +240,9 @@ const Dashboard = ({ onLogout, userData }: DashboardProps) => {
           </div>
         </div>
 
-        <div className="flex justify-between items-center mb-6">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-2">
           <h2 className="text-white text-lg font-semibold">Página 1 de 2</h2>
-          <p className="text-gray-300">Exibindo 1-30 de {filteredFiles.length + 37} arquivos</p>
+          <p className="text-gray-300 text-sm">Exibindo 1-30 de {filteredFiles.length + 37} arquivos</p>
         </div>
 
         {/* Files Grid - Responsivo */}
@@ -278,6 +286,9 @@ const Dashboard = ({ onLogout, userData }: DashboardProps) => {
         onClose={() => setIsUploadFormOpen(false)}
         onSubmit={handleFileUpload}
       />
+
+      {/* PWA Install Prompt */}
+      <PWAInstallPrompt />
     </div>
   );
 };

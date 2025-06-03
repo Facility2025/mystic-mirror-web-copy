@@ -23,6 +23,13 @@ const LoginFormCard = ({ onLogin, onRegisterClick }: LoginFormCardProps) => {
     <div className="w-full max-w-md relative z-10">
       <div className="bg-gradient-to-br from-black/95 to-gray-900/95 border border-purple-500/50 rounded-lg p-8 shadow-2xl transform hover:scale-105 transition-all duration-300 backdrop-blur-md">
         <div className="text-center mb-8">
+          <div className="flex justify-center mb-4">
+            <img 
+              src="/lovable-uploads/3aff111f-532c-4981-9574-0b45374b5d87.png" 
+              alt="Sistema de Arquivos" 
+              className="h-16 w-16 rounded-lg"
+            />
+          </div>
           <h1 className="text-2xl font-bold text-green-400 mb-2">Sistema de Arquivos</h1>
           <p className="text-gray-400">Faça login para continuar</p>
         </div>
