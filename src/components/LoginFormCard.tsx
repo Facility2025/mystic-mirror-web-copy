@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Eye, EyeOff, Mail, Lock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -25,9 +24,12 @@ const LoginFormCard = ({ onLogin, onRegisterClick }: LoginFormCardProps) => {
         <div className="text-center mb-8">
           <div className="flex justify-center mb-4">
             <img 
-              src="/lovable-uploads/3aff111f-532c-4981-9574-0b45374b5d87.png" 
+              src="/lovable-uploads/912d8eeb-60bb-4d7d-b946-a9dd27ced49e.png" 
               alt="Sistema de Arquivos" 
-              className="h-16 w-16 rounded-lg"
+              className="h-[100px] w-[100px] rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 hover:-translate-y-2 hover:rotate-3 filter hover:brightness-110"
+              style={{
+                animation: 'float 3s ease-in-out infinite'
+              }}
             />
           </div>
           <h1 className="text-2xl font-bold text-green-400 mb-2">Sistema de Arquivos</h1>
@@ -110,6 +112,17 @@ const LoginFormCard = ({ onLogin, onRegisterClick }: LoginFormCardProps) => {
           </div>
         </form>
       </div>
+
+      <style jsx>{`
+        @keyframes float {
+          0%, 100% {
+            transform: translateY(0px);
+          }
+          50% {
+            transform: translateY(-10px);
+          }
+        }
+      `}</style>
     </div>
   );
 };
