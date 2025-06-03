@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { Upload, LogOut, File, User, Search } from 'lucide-react';
+import { Upload, LogOut, File, User, Search, Calculator } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import FileCard from './FileCard';
 import FileUploadForm from './FileUploadForm';
 import NeuralBackground from './NeuralBackground';
 import PWAInstallPrompt from './PWAInstallPrompt';
+import BudgetModal from './BudgetModal';
 
 interface UserData {
   email: string;
@@ -92,6 +93,8 @@ const Dashboard = ({ onLogout, userData }: DashboardProps) => {
       icon: <File className="h-8 w-8 text-gray-400" />
     }
   ]);
+
+  const [isBudgetModalOpen, setIsBudgetModalOpen] = useState(false);
 
   const getFileTypeFromData = (fileData: { name: string; file: File | null; fileUrl: string; fileType: string; isLink?: boolean }) => {
     console.log('Processando arquivo:', fileData);
@@ -214,13 +217,23 @@ const Dashboard = ({ onLogout, userData }: DashboardProps) => {
       {/* Main Content */}
       <main className="p-4 sm:p-6 relative z-10">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 border border-neon-green/50 rounded-lg p-4 shadow-[0_0_20px_rgba(0,255,127,0.3)] bg-dark-blue/50 backdrop-blur-sm">
-          <Button 
-            onClick={() => setIsUploadFormOpen(true)}
-            className="bg-dark-green hover:bg-neon-green hover:text-black text-white font-semibold transform hover:scale-105 hover:translate-y-[-2px] transition-all duration-300 w-full sm:w-auto border border-neon-green/30"
-          >
-            <Upload className="h-4 w-4 mr-2" />
-            Enviar Arquivos
-          </Button>
+          <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+            <Button 
+              onClick={() => setIsUploadFormOpen(true)}
+              className="bg-dark-green hover:bg-neon-green hover:text-black text-white font-semibold transform hover:scale-105 hover:translate-y-[-2px] transition-all duration-300 w-full sm:w-auto border border-neon-green/30"
+            >
+              <Upload className="h-4 w-4 mr-2" />
+              Enviar Arquivos
+            </Button>
+            
+            <Button 
+              onClick={() => setIsBudgetModalOpen(true)}
+              className="bg-orange-accent hover:bg-orange-accent/80 text-black font-semibold transform hover:scale-105 hover:translate-y-[-2px] transition-all duration-300 w-full sm:w-auto border border-orange-accent/30"
+            >
+              <Calculator className="h-4 w-4 mr-2" />
+              Vendas Sistema WXsoftware
+            </Button>
+          </div>
           
           {/* Barra de Busca */}
           <div className="relative w-full sm:w-80">
@@ -280,6 +293,12 @@ const Dashboard = ({ onLogout, userData }: DashboardProps) => {
         isOpen={isUploadFormOpen}
         onClose={() => setIsUploadFormOpen(false)}
         onSubmit={handleFileUpload}
+      />
+
+      {/* Budget Modal */}
+      <BudgetModal
+        isOpen={isBudgetModalOpen}
+        onClose={() => setIsBudgetModalOpen(false)}
       />
 
       {/* PWA Install Prompt */}
